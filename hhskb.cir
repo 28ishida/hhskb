@@ -1,0 +1,75 @@
+* D:\yutaka_home\my_doc\Arduino\hhskb\hhskb.cir
+
+* EESchema Netlist Version 1.1 (Spice format) creation date: 2017/01/05 22:34:57
+
+* To exclude a component from the Spice Netlist add [Spice_Netlist_Enabled] user FIELD set to: N
+* To reorder the component spice node sequence add [Spice_Node_Sequence] user FIELD and define sequence: 2,1,0
+
+* Sheet Name: /
+SW11  /OUTPUT1 Net-_D11-Pad2_ SW_PUSH		
+SW12  /OUTPUT2 Net-_D12-Pad2_ SW_PUSH		
+SW13  /OUTPUT3 Net-_D13-Pad2_ SW_PUSH		
+SW17  /OUTPUT7 Net-_D17-Pad2_ SW_PUSH		
+SW14  /OUTPUT4 Net-_D14-Pad2_ SW_PUSH		
+SW15  /OUTPUT5 Net-_D15-Pad2_ SW_PUSH		
+SW16  /OUTPUT6 Net-_D16-Pad2_ SW_PUSH		
+SW21  /OUTPUT1 Net-_D21-Pad2_ SW_PUSH		
+SW22  /OUTPUT2 Net-_D22-Pad2_ SW_PUSH		
+SW23  /OUTPUT3 Net-_D23-Pad2_ SW_PUSH		
+SW24  /OUTPUT4 Net-_D24-Pad2_ SW_PUSH		
+SW25  /OUTPUT5 Net-_D25-Pad2_ SW_PUSH		
+SW26  /OUTPUT6 Net-_D26-Pad2_ SW_PUSH		
+SW31  /OUTPUT1 Net-_D31-Pad2_ SW_PUSH		
+SW32  /OUTPUT2 Net-_D32-Pad2_ SW_PUSH		
+SW33  /OUTPUT3 Net-_D33-Pad2_ SW_PUSH		
+SW34  /OUTPUT4 Net-_D34-Pad2_ SW_PUSH		
+SW35  /OUTPUT5 Net-_D35-Pad2_ SW_PUSH		
+SW36  /OUTPUT6 Net-_D36-Pad2_ SW_PUSH		
+SW41  /OUTPUT1 Net-_D41-Pad2_ SW_PUSH		
+SW42  /OUTPUT2 Net-_D42-Pad2_ SW_PUSH		
+SW43  /OUTPUT3 Net-_D43-Pad2_ SW_PUSH		
+SW44  /OUTPUT4 Net-_D44-Pad2_ SW_PUSH		
+SW45  /OUTPUT5 Net-_D45-Pad2_ SW_PUSH		
+SW46  /OUTPUT6 Net-_D46-Pad2_ SW_PUSH		
+SW53  /OUTPUT3 Net-_D53-Pad2_ SW_PUSH		
+SW54  /OUTPUT4 Net-_D54-Pad2_ SW_PUSH		
+SW55  /OUTPUT5 Net-_D55-Pad2_ SW_PUSH		
+SW52  /OUTPUT2 Net-_D52-Pad2_ SW_PUSH		
+D11  /INPUT1 Net-_D11-Pad2_ D		
+D12  /INPUT1 Net-_D12-Pad2_ D		
+D13  /INPUT1 Net-_D13-Pad2_ D		
+D14  /INPUT1 Net-_D14-Pad2_ D		
+D15  /INPUT1 Net-_D15-Pad2_ D		
+D16  /INPUT1 Net-_D16-Pad2_ D		
+D17  /INPUT1 Net-_D17-Pad2_ D		
+D21  /INPUT2 Net-_D21-Pad2_ D		
+D22  /INPUT2 Net-_D22-Pad2_ D		
+D23  /INPUT2 Net-_D23-Pad2_ D		
+D24  /INPUT2 Net-_D24-Pad2_ D		
+D25  /INPUT2 Net-_D25-Pad2_ D		
+D26  /INPUT2 Net-_D26-Pad2_ D		
+D31  /INPUT3 Net-_D31-Pad2_ D		
+D32  /INPUT3 Net-_D32-Pad2_ D		
+D33  /INPUT3 Net-_D33-Pad2_ D		
+D34  /INPUT3 Net-_D34-Pad2_ D		
+D35  /INPUT3 Net-_D35-Pad2_ D		
+D36  /INPUT3 Net-_D36-Pad2_ D		
+D41  /INPUT4 Net-_D41-Pad2_ D		
+D42  /INPUT4 Net-_D42-Pad2_ D		
+D43  /INPUT4 Net-_D43-Pad2_ D		
+D44  /INPUT4 Net-_D44-Pad2_ D		
+D45  /INPUT4 Net-_D45-Pad2_ D		
+D46  /INPUT4 Net-_D46-Pad2_ D		
+D52  /INPUT5 Net-_D52-Pad2_ D		
+D53  /INPUT5 Net-_D53-Pad2_ D		
+D54  /INPUT5 Net-_D54-Pad2_ D		
+D55  /INPUT5 Net-_D55-Pad2_ D		
+U1  /INPUT1 /INPUT2 /INPUT3 /INPUT4 /INPUT5 /STATE2 /STATE3 /STATE4 VCC GND /SCL /SDA GND GND GND VCC ? ? /OUTPUT1 /OUTPUT2 /OUTPUT3 /OUTPUT4 /OUTPUT5 /OUTPUT6 /OUTPUT7 /STATE1 MCP23017		
+J1  VCC /SDA /SCL GND 4pin_Jack		
+C1  VCC GND 0.1		
+D1  GND /STATE1 LED		
+D2  GND /STATE2 LED		
+D3  GND /STATE3 LED		
+D4  GND /STATE4 LED		
+
+.end
