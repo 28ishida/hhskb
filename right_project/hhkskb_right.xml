@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>D:/yutaka_home/my_doc/Arduino/hhskb_right/hhkskb_right.sch</source>
+    <date>2017/01/24 23:55:23</date>
+    <tool>Eeschema 4.0.1-stable</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>hhkskb_right.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="J1">
+      <value>4pin_Jack</value>
+      <footprint>MyFootprint:4pin_Jack</footprint>
+      <libsource lib="myLib" part="4pin_Jack"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588608C7</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>ARDUINO_MICRO_SHIELD</value>
+      <footprint>arduino_micro_shield:ARDUINO_MICRO_SHIELD</footprint>
+      <libsource lib="arduino_micro_shield" part="ARDUINO_MICRO_SHIELD"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588609C1</tstamp>
+    </comp>
+    <comp ref="SW17">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_200H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58860F17</tstamp>
+    </comp>
+    <comp ref="SW16">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58860F11</tstamp>
+    </comp>
+    <comp ref="SW15">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58860F0B</tstamp>
+    </comp>
+    <comp ref="SW14">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58860DF7</tstamp>
+    </comp>
+    <comp ref="SW13">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58860D03</tstamp>
+    </comp>
+    <comp ref="SW12">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58860CC8</tstamp>
+    </comp>
+    <comp ref="SW11">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58860C30</tstamp>
+    </comp>
+    <comp ref="SW28">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_150H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588615C9</tstamp>
+    </comp>
+    <comp ref="SW27">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588615CF</tstamp>
+    </comp>
+    <comp ref="SW26">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588615D5</tstamp>
+    </comp>
+    <comp ref="SW25">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588615DB</tstamp>
+    </comp>
+    <comp ref="SW24">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588615E1</tstamp>
+    </comp>
+    <comp ref="SW23">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588615E7</tstamp>
+    </comp>
+    <comp ref="SW22">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588615ED</tstamp>
+    </comp>
+    <comp ref="SW21">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588615F3</tstamp>
+    </comp>
+    <comp ref="SW37">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_225H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886175B</tstamp>
+    </comp>
+    <comp ref="SW36">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58861761</tstamp>
+    </comp>
+    <comp ref="SW35">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58861767</tstamp>
+    </comp>
+    <comp ref="SW34">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886176D</tstamp>
+    </comp>
+    <comp ref="SW33">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58861773</tstamp>
+    </comp>
+    <comp ref="SW32">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58861779</tstamp>
+    </comp>
+    <comp ref="SW31">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886177F</tstamp>
+    </comp>
+    <comp ref="SW48">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58861973</tstamp>
+    </comp>
+    <comp ref="SW47">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_175H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58861979</tstamp>
+    </comp>
+    <comp ref="SW46">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886197F</tstamp>
+    </comp>
+    <comp ref="SW45">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58861985</tstamp>
+    </comp>
+    <comp ref="SW44">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886198B</tstamp>
+    </comp>
+    <comp ref="SW43">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58861991</tstamp>
+    </comp>
+    <comp ref="SW42">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58861997</tstamp>
+    </comp>
+    <comp ref="SW41">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886199D</tstamp>
+    </comp>
+    <comp ref="SW57">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_175H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588619A9</tstamp>
+    </comp>
+    <comp ref="SW56">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588619AF</tstamp>
+    </comp>
+    <comp ref="SW55">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588619B5</tstamp>
+    </comp>
+    <comp ref="SW54">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588619BB</tstamp>
+    </comp>
+    <comp ref="SW53">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_100H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588619C1</tstamp>
+    </comp>
+    <comp ref="SW52">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_150H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588619C7</tstamp>
+    </comp>
+    <comp ref="SW51">
+      <value>SW_PUSH</value>
+      <footprint>MyFootprint:CHERRY_PLATE_150H</footprint>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588619CD</tstamp>
+    </comp>
+    <comp ref="D21">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886230F</tstamp>
+    </comp>
+    <comp ref="D22">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588625BE</tstamp>
+    </comp>
+    <comp ref="D23">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58862674</tstamp>
+    </comp>
+    <comp ref="D24">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886272B</tstamp>
+    </comp>
+    <comp ref="D25">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58863D81</tstamp>
+    </comp>
+    <comp ref="D26">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58863E3E</tstamp>
+    </comp>
+    <comp ref="D27">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58863F00</tstamp>
+    </comp>
+    <comp ref="D28">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58863FCB</tstamp>
+    </comp>
+    <comp ref="D11">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588643D7</tstamp>
+    </comp>
+    <comp ref="D12">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588643DD</tstamp>
+    </comp>
+    <comp ref="D13">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588643E3</tstamp>
+    </comp>
+    <comp ref="D14">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588643E9</tstamp>
+    </comp>
+    <comp ref="D15">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588643EF</tstamp>
+    </comp>
+    <comp ref="D16">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588643F5</tstamp>
+    </comp>
+    <comp ref="D17">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588643FB</tstamp>
+    </comp>
+    <comp ref="D31">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864573</tstamp>
+    </comp>
+    <comp ref="D32">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864579</tstamp>
+    </comp>
+    <comp ref="D33">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886457F</tstamp>
+    </comp>
+    <comp ref="D34">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864585</tstamp>
+    </comp>
+    <comp ref="D35">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886458B</tstamp>
+    </comp>
+    <comp ref="D36">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864591</tstamp>
+    </comp>
+    <comp ref="D37">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864597</tstamp>
+    </comp>
+    <comp ref="D41">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588646FF</tstamp>
+    </comp>
+    <comp ref="D42">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864705</tstamp>
+    </comp>
+    <comp ref="D43">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886470B</tstamp>
+    </comp>
+    <comp ref="D44">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864711</tstamp>
+    </comp>
+    <comp ref="D45">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864717</tstamp>
+    </comp>
+    <comp ref="D46">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886471D</tstamp>
+    </comp>
+    <comp ref="D47">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864723</tstamp>
+    </comp>
+    <comp ref="D48">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864729</tstamp>
+    </comp>
+    <comp ref="D51">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886494B</tstamp>
+    </comp>
+    <comp ref="D52">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864951</tstamp>
+    </comp>
+    <comp ref="D53">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864957</tstamp>
+    </comp>
+    <comp ref="D54">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886495D</tstamp>
+    </comp>
+    <comp ref="D55">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864963</tstamp>
+    </comp>
+    <comp ref="D56">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58864969</tstamp>
+    </comp>
+    <comp ref="D57">
+      <value>D</value>
+      <footprint>Discret:DO-41</footprint>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5886496F</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="myLib" part="4pin_Jack">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">4pin_Jack</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VCC" type="passive"/>
+        <pin num="2" name="SDA" type="passive"/>
+        <pin num="3" name="SCL" type="passive"/>
+        <pin num="4" name="GND" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="arduino_micro_shield" part="ARDUINO_MICRO_SHIELD">
+      <description>Arduino Micro shield</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">ARDUINO_MICRO_SHIELD</field>
+      </fields>
+      <pins>
+        <pin num="2" name="2/SDA" type="BiDi"/>
+        <pin num="3" name="3(PWM)/SCL" type="BiDi"/>
+        <pin num="4" name="4/A6" type="BiDi"/>
+        <pin num="5" name="5(PWM)" type="BiDi"/>
+        <pin num="5V" name="+5V" type="power_in"/>
+        <pin num="6" name="6(PWM)/A7" type="BiDi"/>
+        <pin num="7" name="7" type="BiDi"/>
+        <pin num="8" name="8/A8" type="BiDi"/>
+        <pin num="9" name="9(PWM)/A9" type="BiDi"/>
+        <pin num="10" name="10(PWM)/A10" type="BiDi"/>
+        <pin num="11" name="11(PWM)" type="BiDi"/>
+        <pin num="12" name="12/A11" type="BiDi"/>
+        <pin num="13" name="13(PWM)" type="BiDi"/>
+        <pin num="3.3V" name="3.3V" type="power_in"/>
+        <pin num="A0" name="A0" type="BiDi"/>
+        <pin num="A1" name="A1" type="BiDi"/>
+        <pin num="A2" name="A2" type="BiDi"/>
+        <pin num="A3" name="A3" type="BiDi"/>
+        <pin num="A4" name="A4" type="BiDi"/>
+        <pin num="A5" name="A5" type="BiDi"/>
+        <pin num="AREF" name="AREF" type="power_in"/>
+        <pin num="GND" name="GND" type="power_in"/>
+        <pin num="MI" name="MISO" type="BiDi"/>
+        <pin num="MO" name="MOSI" type="BiDi"/>
+        <pin num="NC" name="~" type="NotConnected"/>
+        <pin num="RST" name="RESET" type="BiDi"/>
+        <pin num="RX" name="0/RX" type="BiDi"/>
+        <pin num="SCK" name="SCK" type="BiDi"/>
+        <pin num="SS" name="RX_LED/SS" type="BiDi"/>
+        <pin num="TX" name="1/TX" type="BiDi"/>
+        <pin num="VI" name="VIN" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="D">
+      <description>Diode</description>
+      <footprints>
+        <fp>Diode_*</fp>
+        <fp>D-Pak_TO252AA</fp>
+        <fp>*SingleDiode</fp>
+        <fp>*_Diode_*</fp>
+        <fp>*SingleDiode*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">D</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="SW_PUSH">
+      <description>Button</description>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SW_PUSH</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="device">
+      <uri>C:\Program Files\KiCad\share\kicad\library\device.lib</uri>
+    </library>
+    <library logical="arduino_micro_shield">
+      <uri>D:\yutaka_home\my_doc\Arduino\arduino_micro_shield-master\arduino_micro_shield.lib</uri>
+    </library>
+    <library logical="myLib">
+      <uri>D:\yutaka_home\my_doc\Arduino\kicad_library\myLib.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="Net-(D25-Pad2)">
+      <node ref="SW25" pin="2"/>
+      <node ref="D25" pin="2"/>
+    </net>
+    <net code="2" name="Net-(D54-Pad2)">
+      <node ref="SW54" pin="2"/>
+      <node ref="D54" pin="2"/>
+    </net>
+    <net code="3" name="Net-(D55-Pad2)">
+      <node ref="SW55" pin="2"/>
+      <node ref="D55" pin="2"/>
+    </net>
+    <net code="4" name="Net-(D56-Pad2)">
+      <node ref="D56" pin="2"/>
+      <node ref="SW56" pin="2"/>
+    </net>
+    <net code="5" name="Net-(D57-Pad2)">
+      <node ref="D57" pin="2"/>
+      <node ref="SW57" pin="2"/>
+    </net>
+    <net code="6" name="Net-(D45-Pad2)">
+      <node ref="D45" pin="2"/>
+      <node ref="SW45" pin="2"/>
+    </net>
+    <net code="7" name="Net-(D46-Pad2)">
+      <node ref="D46" pin="2"/>
+      <node ref="SW46" pin="2"/>
+    </net>
+    <net code="8" name="Net-(D47-Pad2)">
+      <node ref="SW47" pin="2"/>
+      <node ref="D47" pin="2"/>
+    </net>
+    <net code="9" name="Net-(D48-Pad2)">
+      <node ref="D48" pin="2"/>
+      <node ref="SW48" pin="2"/>
+    </net>
+    <net code="10" name="Net-(D37-Pad2)">
+      <node ref="D37" pin="2"/>
+      <node ref="SW37" pin="2"/>
+    </net>
+    <net code="11" name="Net-(D36-Pad2)">
+      <node ref="D36" pin="2"/>
+      <node ref="SW36" pin="2"/>
+    </net>
+    <net code="12" name="Net-(D35-Pad2)">
+      <node ref="D35" pin="2"/>
+      <node ref="SW35" pin="2"/>
+    </net>
+    <net code="13" name="Net-(D44-Pad2)">
+      <node ref="D44" pin="2"/>
+      <node ref="SW44" pin="2"/>
+    </net>
+    <net code="14" name="Net-(D26-Pad2)">
+      <node ref="SW26" pin="2"/>
+      <node ref="D26" pin="2"/>
+    </net>
+    <net code="15" name="Net-(D27-Pad2)">
+      <node ref="SW27" pin="2"/>
+      <node ref="D27" pin="2"/>
+    </net>
+    <net code="16" name="Net-(D28-Pad2)">
+      <node ref="D28" pin="2"/>
+      <node ref="SW28" pin="2"/>
+    </net>
+    <net code="17" name="Net-(D17-Pad2)">
+      <node ref="D17" pin="2"/>
+      <node ref="SW17" pin="2"/>
+    </net>
+    <net code="18" name="Net-(D16-Pad2)">
+      <node ref="SW16" pin="2"/>
+      <node ref="D16" pin="2"/>
+    </net>
+    <net code="19" name="Net-(D15-Pad2)">
+      <node ref="SW15" pin="2"/>
+      <node ref="D15" pin="2"/>
+    </net>
+    <net code="20" name="Net-(D14-Pad2)">
+      <node ref="SW14" pin="2"/>
+      <node ref="D14" pin="2"/>
+    </net>
+    <net code="21" name="Net-(D13-Pad2)">
+      <node ref="SW13" pin="2"/>
+      <node ref="D13" pin="2"/>
+    </net>
+    <net code="22" name="Net-(D12-Pad2)">
+      <node ref="D12" pin="2"/>
+      <node ref="SW12" pin="2"/>
+    </net>
+    <net code="23" name="Net-(D11-Pad2)">
+      <node ref="SW11" pin="2"/>
+      <node ref="D11" pin="2"/>
+    </net>
+    <net code="24" name="Net-(D41-Pad2)">
+      <node ref="D41" pin="2"/>
+      <node ref="SW41" pin="2"/>
+    </net>
+    <net code="25" name="Net-(D34-Pad2)">
+      <node ref="D34" pin="2"/>
+      <node ref="SW34" pin="2"/>
+    </net>
+    <net code="26" name="Net-(D24-Pad2)">
+      <node ref="D24" pin="2"/>
+      <node ref="SW24" pin="2"/>
+    </net>
+    <net code="27" name="Net-(D51-Pad2)">
+      <node ref="SW51" pin="2"/>
+      <node ref="D51" pin="2"/>
+    </net>
+    <net code="28" name="Net-(D31-Pad2)">
+      <node ref="SW31" pin="2"/>
+      <node ref="D31" pin="2"/>
+    </net>
+    <net code="29" name="Net-(D32-Pad2)">
+      <node ref="SW32" pin="2"/>
+      <node ref="D32" pin="2"/>
+    </net>
+    <net code="30" name="Net-(D33-Pad2)">
+      <node ref="SW33" pin="2"/>
+      <node ref="D33" pin="2"/>
+    </net>
+    <net code="31" name="Net-(D23-Pad2)">
+      <node ref="SW23" pin="2"/>
+      <node ref="D23" pin="2"/>
+    </net>
+    <net code="32" name="Net-(D22-Pad2)">
+      <node ref="D22" pin="2"/>
+      <node ref="SW22" pin="2"/>
+    </net>
+    <net code="33" name="Net-(D21-Pad2)">
+      <node ref="D21" pin="2"/>
+      <node ref="SW21" pin="2"/>
+    </net>
+    <net code="34" name="Net-(D42-Pad2)">
+      <node ref="D42" pin="2"/>
+      <node ref="SW42" pin="2"/>
+    </net>
+    <net code="35" name="Net-(D52-Pad2)">
+      <node ref="SW52" pin="2"/>
+      <node ref="D52" pin="2"/>
+    </net>
+    <net code="36" name="Net-(D53-Pad2)">
+      <node ref="SW53" pin="2"/>
+      <node ref="D53" pin="2"/>
+    </net>
+    <net code="37" name="Net-(D43-Pad2)">
+      <node ref="D43" pin="2"/>
+      <node ref="SW43" pin="2"/>
+    </net>
+    <net code="39" name="Net-(U1-PadRX)">
+      <node ref="U1" pin="RX"/>
+    </net>
+    <net code="40" name="Net-(U1-PadTX)">
+      <node ref="U1" pin="TX"/>
+    </net>
+    <net code="41" name="Net-(U1-PadSS)">
+      <node ref="U1" pin="SS"/>
+    </net>
+    <net code="42" name="Net-(U1-PadMO)">
+      <node ref="U1" pin="MO"/>
+    </net>
+    <net code="43" name="Net-(U1-PadRST)">
+      <node ref="U1" pin="RST"/>
+    </net>
+    <net code="44" name="Net-(U1-PadVI)">
+      <node ref="U1" pin="VI"/>
+    </net>
+    <net code="45" name="Net-(U1-PadMI)">
+      <node ref="U1" pin="MI"/>
+    </net>
+    <net code="46" name="Net-(U1-PadSCK)">
+      <node ref="U1" pin="SCK"/>
+    </net>
+    <net code="48" name="GND">
+      <node ref="U1" pin="GND"/>
+      <node ref="J1" pin="4"/>
+    </net>
+    <net code="49" name="VCC">
+      <node ref="U1" pin="5V"/>
+      <node ref="J1" pin="1"/>
+    </net>
+    <net code="50" name="Net-(U1-Pad12)">
+      <node ref="U1" pin="12"/>
+    </net>
+    <net code="51" name="Net-(U1-Pad13)">
+      <node ref="U1" pin="13"/>
+    </net>
+    <net code="52" name="Net-(U1-Pad3.3V)">
+      <node ref="U1" pin="3.3V"/>
+    </net>
+    <net code="53" name="Net-(U1-PadAREF)">
+      <node ref="U1" pin="AREF"/>
+    </net>
+    <net code="54" name="Net-(U1-PadA0)">
+      <node ref="U1" pin="A0"/>
+    </net>
+    <net code="55" name="/OUTPUT6">
+      <node ref="SW46" pin="1"/>
+      <node ref="SW36" pin="1"/>
+      <node ref="SW26" pin="1"/>
+      <node ref="SW56" pin="1"/>
+      <node ref="U1" pin="9"/>
+      <node ref="SW16" pin="1"/>
+    </net>
+    <net code="57" name="/INPUT5">
+      <node ref="D57" pin="1"/>
+      <node ref="D56" pin="1"/>
+      <node ref="D55" pin="1"/>
+      <node ref="D51" pin="1"/>
+      <node ref="D52" pin="1"/>
+      <node ref="D53" pin="1"/>
+      <node ref="D54" pin="1"/>
+      <node ref="U1" pin="A5"/>
+    </net>
+    <net code="58" name="/INPUT4">
+      <node ref="D44" pin="1"/>
+      <node ref="U1" pin="A4"/>
+      <node ref="D41" pin="1"/>
+      <node ref="D42" pin="1"/>
+      <node ref="D45" pin="1"/>
+      <node ref="D43" pin="1"/>
+      <node ref="D46" pin="1"/>
+      <node ref="D47" pin="1"/>
+      <node ref="D48" pin="1"/>
+    </net>
+    <net code="59" name="/INPUT3">
+      <node ref="U1" pin="A3"/>
+      <node ref="D31" pin="1"/>
+      <node ref="D32" pin="1"/>
+      <node ref="D33" pin="1"/>
+      <node ref="D34" pin="1"/>
+      <node ref="D37" pin="1"/>
+      <node ref="D36" pin="1"/>
+      <node ref="D35" pin="1"/>
+    </net>
+    <net code="60" name="/INPUT1">
+      <node ref="D11" pin="1"/>
+      <node ref="D12" pin="1"/>
+      <node ref="D13" pin="1"/>
+      <node ref="D17" pin="1"/>
+      <node ref="D16" pin="1"/>
+      <node ref="D14" pin="1"/>
+      <node ref="D15" pin="1"/>
+      <node ref="U1" pin="A1"/>
+    </net>
+    <net code="61" name="/OUTPUT8">
+      <node ref="SW28" pin="1"/>
+      <node ref="SW48" pin="1"/>
+      <node ref="U1" pin="11"/>
+    </net>
+    <net code="62" name="/OUTPUT7">
+      <node ref="SW17" pin="1"/>
+      <node ref="U1" pin="10"/>
+      <node ref="SW57" pin="1"/>
+      <node ref="SW37" pin="1"/>
+      <node ref="SW47" pin="1"/>
+      <node ref="SW27" pin="1"/>
+    </net>
+    <net code="63" name="Net-(U1-PadNC)">
+      <node ref="U1" pin="NC"/>
+    </net>
+    <net code="64" name="/OUTPUT5">
+      <node ref="SW55" pin="1"/>
+      <node ref="U1" pin="8"/>
+      <node ref="SW35" pin="1"/>
+      <node ref="SW15" pin="1"/>
+      <node ref="SW25" pin="1"/>
+      <node ref="SW45" pin="1"/>
+    </net>
+    <net code="65" name="/OUTPUT4">
+      <node ref="SW54" pin="1"/>
+      <node ref="U1" pin="7"/>
+      <node ref="SW14" pin="1"/>
+      <node ref="SW34" pin="1"/>
+      <node ref="SW24" pin="1"/>
+      <node ref="SW44" pin="1"/>
+    </net>
+    <net code="66" name="/OUTPUT3">
+      <node ref="SW43" pin="1"/>
+      <node ref="SW53" pin="1"/>
+      <node ref="SW23" pin="1"/>
+      <node ref="SW13" pin="1"/>
+      <node ref="SW33" pin="1"/>
+      <node ref="U1" pin="6"/>
+    </net>
+    <net code="67" name="/OUTPUT2">
+      <node ref="SW12" pin="1"/>
+      <node ref="SW22" pin="1"/>
+      <node ref="SW32" pin="1"/>
+      <node ref="SW42" pin="1"/>
+      <node ref="U1" pin="5"/>
+      <node ref="SW52" pin="1"/>
+    </net>
+    <net code="68" name="/OUTPUT1">
+      <node ref="SW11" pin="1"/>
+      <node ref="SW31" pin="1"/>
+      <node ref="SW21" pin="1"/>
+      <node ref="SW41" pin="1"/>
+      <node ref="SW51" pin="1"/>
+      <node ref="U1" pin="4"/>
+    </net>
+    <net code="69" name="/SDA">
+      <node ref="U1" pin="2"/>
+      <node ref="J1" pin="2"/>
+    </net>
+    <net code="70" name="/SCL">
+      <node ref="U1" pin="3"/>
+      <node ref="J1" pin="3"/>
+    </net>
+    <net code="71" name="/INPUT2">
+      <node ref="D27" pin="1"/>
+      <node ref="D26" pin="1"/>
+      <node ref="D22" pin="1"/>
+      <node ref="D25" pin="1"/>
+      <node ref="D21" pin="1"/>
+      <node ref="D24" pin="1"/>
+      <node ref="D28" pin="1"/>
+      <node ref="D23" pin="1"/>
+      <node ref="U1" pin="A2"/>
+    </net>
+  </nets>
+</export>
