@@ -1,0 +1,20 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#
+# 4pin_Jack
+#
+DEF 4pin_Jack J 0 40 Y Y 1 F N
+F0 "J" -50 -250 60 H V C CNN
+F1 "4pin_Jack" -100 250 60 H V C CNN
+F2 "" -50 200 60 H V C CNN
+F3 "" -50 200 60 H V C CNN
+DRAW
+S -250 200 50 -200 0 1 0 N
+X VCC 1 250 150 200 L 50 50 1 1 P
+X SDA 2 250 50 200 L 50 50 1 1 P
+X SCL 3 250 -50 200 L 50 50 1 1 P
+X GND 4 250 -150 200 L 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+#End Library
