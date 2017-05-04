@@ -1,0 +1,21 @@
+#######################################
+# Syntax Coloring Map For skMCP230
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+skMCP230	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+Init	KEYWORD2
+Receive	KEYWORD2
+Send	KEYWORD2
+Read	KEYWORD2
+Write	KEYWORD2
+ReadINTF	KEYWORD2
+pinMode	KEYWORD2
+
