@@ -1,6 +1,9 @@
 #include "right_firm.h"
 #include "left_firm.h"
 
+static const int OFF = 1;
+static const int ON = 0;    // 今回の回路はアクティブロー
+
 // 特殊文字宣言
 static const char BS  = 0x08;
 static const char TAB = 0x09;
@@ -11,9 +14,9 @@ static const char LF  = 0x12;
 static const char CR  = 0x15;
 
 // キーをパースするウェイト時間(msec)
-static const char PARSE_WAIT = 50;
+static const char PARSE_WAIT = 20;
 // 連打抑制パース回数
-static const char SILENT_COUNT = 500 / PARSE_WAIT; // パース時間が換算されていないので、500msecにはならない
+static const char SILENT_COUNT = 400 / PARSE_WAIT; // パース時間が換算されていないので、500msecにはならない
 
 // 右手通常文字の配置定義
 static char RSymbol[5][8] = 
@@ -74,46 +77,63 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  // 右手パース
-  int connBuf = 0;
 
+  // キーのパース
   ParseRightKey(RKeyBuf);
   ParseLeftKey(LKeyBuf);
   
   for ( int row = 0; row < 5; row++ )
   {
-    for ( int cow = 0; cow < 8; cow++ )
+    for ( int col = 0; col < 8; col++ )
     {
-      if ( RKey[row][cow] == 0 )
+      if ( ( RKey[row][col] == OFF ) && ( RWaiter[row][col] != SILENT_COUNT ) )
       {
-        Serial.print(RSymbol[row][cow]);
-        /*
-        if ( RWaiter[row][cow] == SILENT_COUNT ) 
+        RWaiter[row][col] = SILENT_COUNT;
+      }
+      
+      if ( RKey[row][col] == ON )
+      {
+        if ( RWaiter[row][col] == SILENT_COUNT ) 
         {
-          Serial.print(RSymbol[row][cow]);
-          RWaiter[row][cow]--;
+          Serial.print(RSymbol[row][col]);
+          RWaiter[row][col]--;
         }
-        else if ( RWaiter[row][cow] > 0 )
+        else if ( RWaiter[row][col] > 0 )
         {
-          RWaiter[row][cow]--;
+          RWaiter[row][col]--;
         }
         else
         {
-          Serial.print(RSymbol[row][cow]);
+          Serial.print(RSymbol[row][col]);
         }
-        */
       }
     }
   }
-  
-  
+
   for ( int row = 0; row < 5; row++ )
   {
-    for ( int cow = 0; cow < 7; cow++ )
+    for ( int col = 0; col < 7; col++ )
     {
-      if ( LKey[row][cow] == 0 )
+      if ( ( LKey[row][col] == OFF ) && ( LWaiter[row][col] != SILENT_COUNT ) )
       {
-        Serial.print(LSymbol[row][cow]);
+        LWaiter[row][col] = SILENT_COUNT;
+      }
+      
+      if ( LKey[row][col] == ON )
+      {
+        if ( LWaiter[row][col] == SILENT_COUNT ) 
+        {
+          Serial.print(LSymbol[row][col]);
+          LWaiter[row][col]--;
+        }
+        else if ( LWaiter[row][col] > 0 )
+        {
+          LWaiter[row][col]--;
+        }
+        else
+        {
+          Serial.print(LSymbol[row][col]);
+        }
       }
     }
   }
