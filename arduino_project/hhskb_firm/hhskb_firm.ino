@@ -1,49 +1,70 @@
+#include <Keyboard.h>
 #include "right_firm.h"
 #include "left_firm.h"
 
+static void ReleaseAllKey();
+
+// 一般的な定義
 static const int OFF = 1;
 static const int ON = 0;    // 今回の回路はアクティブロー
+static const int NO_ASMBL = -1;
 
 // 特殊文字宣言
-static const char BS  = 0x08;
 static const char TAB = 0x09;
-static const char ESC = 0x1b;
 static const char SPC = 0x20;
-static const char DEL = 0x7f;
-static const char LF  = 0x12;
-static const char CR  = 0x15;
+static const int Fn   = 0xf0;   // 適当
+static const int PRTSC = 0xce;  // print screen?
 
-// キーをパースするウェイト時間(msec)
-static const char PARSE_WAIT = 20;
-// 連打抑制パース回数
-static const char SILENT_COUNT = 400 / PARSE_WAIT; // パース時間が換算されていないので、500msecにはならない
+// ファンクションキー関連
+static bool IsFnEnable = false;
 
 // 右手通常文字の配置定義
-static char RSymbol[5][8] = 
+static int RSymbol[5][8] = 
 {
   { '7', '8', '9', '0', '-', '=', '\\', '`' },
-  { 'y', 'u', 'i', 'o', 'p', '[', ']',  DEL },
-  { 'h', 'j', 'k', 'l', ';', '\'', CR,  0 },
-  { 'b', 'n', 'm', ',', '.', '/',  0 ,  0 },
-  {  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 } 
+  { 'y', 'u', 'i', 'o', 'p', '[', ']', KEY_DELETE },
+  { 'h', 'j', 'k', 'l', ';', '\'', KEY_RETURN, NO_ASMBL },
+  { 'b', 'n', 'm', ',', '.', '/', KEY_RIGHT_SHIFT, Fn },
+  { SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL } 
 };
+
+// 右手用ファンクション押下時シンボル
+static int RFnSymbol[5][8] =
+{
+  { KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_INSERT, KEY_DELETE },
+  { 0, 0, PRTSC, 0, 0, KEY_UP_ARROW, 0, KEY_BACKSPACE },
+  { 0, 0, KEY_HOME, KEY_PAGE_UP, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 0, NO_ASMBL },
+  { 0, 0, 0, KEY_END, KEY_PAGE_DOWN, KEY_DOWN_ARROW, 0, Fn },
+  { SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL } 
+};
+
 // 右手用入力バッファ
 static char RKey[5][8];
 
 // 右手用入力バッファの列の先頭アドレスを格納する変数
 static char* RKeyBuf[5];
 
-// 右手用連打制御変数
-static char RWaiter[5][8];
+// ひとつ前のパース結果を格納する変数
+static char OldRKey[5][8];
 
 // 左手用シンボル
-static char LSymbol[5][7] =
+static int LSymbol[5][7] =
 {
-  { ESC, '1', '2', '3', '4', '5', '6' },
-  { TAB, 'q', 'w', 'e', 'r', 't',  0  },
-  { 0  , 'a', 's', 'd', 'f', 'g',  0  },
-  { 0  , 'z', 'x', 'c', 'v', 'b',  0  },
-  { 0  ,  0 ,  0 ,  0 ,  0 ,  0,   0  }
+  { KEY_ESC, '1', '2', '3', '4', '5', '6' },
+  { TAB, 'q', 'w', 'e', 'r', 't', NO_ASMBL },
+  { KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', NO_ASMBL },
+  { KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NO_ASMBL },
+  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL }
+};
+
+// 左手用Fn押下時シンボル
+static int LFnSymbol[5][7] =
+{
+  { 0, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6 },
+  { 0, 0, 0, 0, 0, 0, NO_ASMBL },
+  { 0, 0, 0, 0, 0, 0, NO_ASMBL },
+  { 0, 0, 0, 0, 0, 0, NO_ASMBL },
+  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL }
 };
 
 // 左手用入力バッファ
@@ -52,15 +73,15 @@ static char LKey[5][7];
 // 左手用入力バッファの列の先頭アドレスを格納する変数
 static char* LKeyBuf[5];
 
-// 左手用入力連打抑制変数
-static char LWaiter[5][7];
+// ひとつ前のパース結果を格納する変数
+static char OldLKey[5][8];
 
 void setup() {
   // put your setup code here, to run once:
-  memset( RWaiter, SILENT_COUNT, 40 );
-  memset( LWaiter, SILENT_COUNT, 35 );
-  memset( RKey, (char)1, 40 );
-  memset( LKey, (char)1, 35 );
+  memset( RKey, (char)OFF, 40 );
+  memset( LKey, (char)OFF, 35 );
+  memset( OldRKey, (char)OFF, 40 );
+  memset( OldLKey, (char)OFF, 35 );
 
   // アドレス変数の初期化
   for( int i = 0; i < 5; i++ )
@@ -68,11 +89,10 @@ void setup() {
     RKeyBuf[i] = RKey[i];
     LKeyBuf[i] = LKey[i];
   }
- 
   InitRightFirm();
   InitLeftFirm();
   
-  Serial.begin(9600);
+  Keyboard.begin();
 }
 
 void loop() {
@@ -86,26 +106,45 @@ void loop() {
   {
     for ( int col = 0; col < 8; col++ )
     {
-      if ( ( RKey[row][col] == OFF ) && ( RWaiter[row][col] != SILENT_COUNT ) )
+      if ( ( RKey[row][col] == ON ) && ( OldRKey[row][col] == OFF ) )
       {
-        RWaiter[row][col] = SILENT_COUNT;
-      }
-      
-      if ( RKey[row][col] == ON )
-      {
-        if ( RWaiter[row][col] == SILENT_COUNT ) 
+        if ( RSymbol[row][col] == Fn )
         {
-          Serial.print(RSymbol[row][col]);
-          RWaiter[row][col]--;
+          if ( !IsFnEnable )
+          {
+            IsFnEnable = true;
+            TurnOnStatusLed(2);
+          }
+          else
+          {
+            IsFnEnable = false;
+            TurnOffStatusLed(2);
+            ReleaseAllKey();
+          }
         }
-        else if ( RWaiter[row][col] > 0 )
+        if (!IsFnEnable )
         {
-          RWaiter[row][col]--;
+          Keyboard.press(RSymbol[row][col]);
         }
         else
         {
-          Serial.print(RSymbol[row][col]);
+          Keyboard.press(RFnSymbol[row][col]);
         }
+        OldRKey[row][col] = ON;
+      }
+
+      if ( ( OldRKey[row][col] == ON ) && ( RKey[row][col] == OFF ) )
+      {
+        if ( !IsFnEnable )
+        {
+          Keyboard.release(RSymbol[row][col]);
+        }
+        else
+        {
+          Keyboard.release(RFnSymbol[row][col]);
+        }
+                
+        OldRKey[row][col] = OFF;
       }
     }
   }
@@ -114,29 +153,38 @@ void loop() {
   {
     for ( int col = 0; col < 7; col++ )
     {
-      if ( ( LKey[row][col] == OFF ) && ( LWaiter[row][col] != SILENT_COUNT ) )
+      if ( ( LKey[row][col] == ON ) && ( OldLKey[row][col] == OFF ) )
       {
-        LWaiter[row][col] = SILENT_COUNT;
-      }
-      
-      if ( LKey[row][col] == ON )
-      {
-        if ( LWaiter[row][col] == SILENT_COUNT ) 
+        if ( !IsFnEnable )
         {
-          Serial.print(LSymbol[row][col]);
-          LWaiter[row][col]--;
-        }
-        else if ( LWaiter[row][col] > 0 )
-        {
-          LWaiter[row][col]--;
+          Keyboard.press(LSymbol[row][col]);
         }
         else
         {
-          Serial.print(LSymbol[row][col]);
+          Keyboard.press(LFnSymbol[row][col]);
         }
+        OldLKey[row][col] = ON;
+      }
+      if ( ( OldLKey[row][col] == ON ) && ( LKey[row][col] == OFF ) )
+      {
+        if ( !IsFnEnable )
+        {
+          Keyboard.release(LSymbol[row][col]);
+        }
+        else
+        {
+          Keyboard.release(LFnSymbol[row][col]);
+        }
+        OldLKey[row][col] = OFF;
       }
     }
   }
-
-  delay(PARSE_WAIT);
 }
+
+static void ReleaseAllKey()
+{
+  Keyboard.releaseAll();
+  memset( OldRKey, (char)OFF, 40 );
+  memset( OldLKey, (char)OFF, 35 );
+}
+

@@ -3,6 +3,10 @@
 #include <skMCP230.h>
 #include <Wire.h>
 
+#define LED1 GPB5
+#define LED2 GPB6
+#define LED3 GPB7
+
 // デバイスの７ビットアドレス(0100A2A1A0)
 #define MCP230_ADDRESS  0b0100000   // MCP23017のI2Cアドレス(A2=0,A1=0,A0=0)
 skMCP230 expIO(MCP230_ADDRESS) ;        // MCP23017ライブラリの生成を行う
@@ -34,6 +38,10 @@ void InitLeftFirm()
   expIO.Write(GPA, GPB2, HIGH);
   expIO.Write(GPA, GPB3, HIGH);
   expIO.Write(GPA, GPB4, HIGH);
+
+  expIO.Write(GPB, LED1, HIGH);
+  expIO.Write(GPB, LED2, LOW);
+  expIO.Write(GPB, LED3, LOW);
 }
 
 // キーのパース 引数は5x7の行列分の領域を割り当て済である必要があります。
@@ -90,4 +98,37 @@ int ParseLeftKey(char** ans)
   ans[4][6] = 0;
   expIO.Write(GPB, GPB4, HIGH);
 }
+
+int TurnOnStatusLed( int ledNum )
+{
+  if ( ledNum == 0 )
+  {
+    expIO.Write(GPB, LED1, HIGH);
+  }
+  else if ( ledNum == 1 )
+  {
+    expIO.Write(GPB, LED2, HIGH); 
+  }
+  else if ( ledNum == 2 )
+  {
+    expIO.Write(GPB, LED3, HIGH);
+  }
+}
+int TurnOffStatusLed( int ledNum )
+{
+  if ( ledNum == 0 )
+  {
+    expIO.Write(GPB, LED1, LOW);
+  }
+  else if ( ledNum == 1 )
+  {
+    expIO.Write(GPB, LED2, LOW);
+  }
+  else if ( ledNum == 2 )
+  {
+    expIO.Write(GPB, LED3, LOW);
+  }  
+}
+
+
 
