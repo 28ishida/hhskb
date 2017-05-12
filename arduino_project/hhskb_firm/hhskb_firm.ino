@@ -25,7 +25,7 @@ static int RSymbol[5][8] =
   { 'y', 'u', 'i', 'o', 'p', '[', ']', KEY_DELETE },
   { 'h', 'j', 'k', 'l', ';', '\'', KEY_RETURN, NO_ASMBL },
   { 'b', 'n', 'm', ',', '.', '/', KEY_RIGHT_SHIFT, Fn },
-  { SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_LEFT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL } 
+  { SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL } 
 };
 
 // 右手用ファンクション押下時シンボル
@@ -35,7 +35,7 @@ static int RFnSymbol[5][8] =
   { 0, 0, PRTSC, 0, 0, KEY_UP_ARROW, 0, KEY_BACKSPACE },
   { 0, 0, KEY_HOME, KEY_PAGE_UP, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 0, NO_ASMBL },
   { 0, 0, 0, KEY_END, KEY_PAGE_DOWN, KEY_DOWN_ARROW, 0, Fn },
-  { SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_LEFT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL } 
+  { SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL } 
 };
 
 // 右手用入力バッファ
@@ -54,7 +54,7 @@ static int LSymbol[5][7] =
   { TAB, 'q', 'w', 'e', 'r', 't', NO_ASMBL },
   { KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', NO_ASMBL },
   { KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NO_ASMBL },
-  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL }
+  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_LEFT_ALT, KEY_LEFT_CTRL, NO_ASMBL }
 };
 
 // 左手用Fn押下時シンボル
@@ -64,7 +64,7 @@ static int LFnSymbol[5][7] =
   { 0, 0, 0, 0, 0, 0, NO_ASMBL },
   { 0, 0, 0, 0, 0, 0, NO_ASMBL },
   { 0, 0, 0, 0, 0, 0, NO_ASMBL },
-  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL }
+  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_LEFT_ALT, KEY_LEFT_CTRL, NO_ASMBL }
 };
 
 // 左手用入力バッファ
