@@ -18,6 +18,20 @@ static const int PRTSC = 0xce;  // print screen?
 // ファンクションキー関連
 static bool IsFnEnable = false;
 
+// 左右定義
+enum RightLeft
+{
+  Right,
+  Left
+};
+
+// ボタンアクション
+enum ButtonAction
+{
+  TurnOn,
+  TurnOff
+};
+
 // 右手通常文字の配置定義
 static int RSymbol[5][8] = 
 {
@@ -113,14 +127,7 @@ void loop() {
             IsFnEnable = true;
             TurnOnStatusLed(2);
         }
-        if (!IsFnEnable )
-        {
-          Keyboard.press(RSymbol[row][col]);
-        }
-        else
-        {
-          Keyboard.press(RFnSymbol[row][col]);
-        }
+        keyboardAction(row, col, Right, TurnOn );
         OldRKey[row][col] = ON;
       }
 
@@ -131,16 +138,7 @@ void loop() {
             IsFnEnable = false;
             TurnOffStatusLed(2);
         }
-
-        if ( !IsFnEnable )
-        {
-          Keyboard.release(RSymbol[row][col]);
-        }
-        else
-        {
-          Keyboard.release(RFnSymbol[row][col]);
-        }
-                
+        keyboardAction(row, col, Right, TurnOff);      
         OldRKey[row][col] = OFF;
       }
     }
@@ -152,26 +150,12 @@ void loop() {
     {
       if ( ( LKey[row][col] == ON ) && ( OldLKey[row][col] == OFF ) )
       {
-        if ( !IsFnEnable )
-        {
-          Keyboard.press(LSymbol[row][col]);
-        }
-        else
-        {
-          Keyboard.press(LFnSymbol[row][col]);
-        }
+        keyboardAction(row, col, Left, TurnOn);
         OldLKey[row][col] = ON;
       }
       if ( ( OldLKey[row][col] == ON ) && ( LKey[row][col] == OFF ) )
       {
-        if ( !IsFnEnable )
-        {
-          Keyboard.release(LSymbol[row][col]);
-        }
-        else
-        {
-          Keyboard.release(LFnSymbol[row][col]);
-        }
+        keyboardAction(row, col, Left, TurnOff);
         OldLKey[row][col] = OFF;
       }
     }
@@ -185,3 +169,38 @@ static void ReleaseAllKey()
   memset( OldLKey, (char)OFF, 35 );
 }
 
+static void keyboardAction(int row, int col, RightLeft lr, ButtonAction ba)
+{
+  int tgtCode = 0;
+  if ( lr == Right)
+  {
+    if (!IsFnEnable )
+    {
+      tgtCode = RSymbol[row][col];
+    }
+    else
+    {
+      tgtCode = RFnSymbol[row][col];
+    }
+  }
+  else
+  {
+    if (!IsFnEnable )
+    {
+      tgtCode = LSymbol[row][col];
+    }
+    else
+    {
+      tgtCode = LFnSymbol[row][col];
+    }
+  }
+
+  if ( ba == TurnOn )
+  {
+    Keyboard.press(tgtCode);
+  }
+  else
+  {
+    Keyboard.release(tgtCode);
+  }
+}
