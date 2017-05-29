@@ -40,8 +40,6 @@ static int RFnSymbol[5][8] =
 
 // ひとつ前のパース結果を格納する変数
 static char OldRKey[5][8];
-
-// ひとつ前のパース結果を格納する変数
 static char OldLKey[5][8];
 
 // 左手用シンボル
@@ -80,17 +78,39 @@ void loop() {
   char RKey[5][8];
   memset( RKey, (char)OFF, 40 );
   ParseRightKey(RKey);
-  keyboardAction(5, 8, RKey, OldRKey, RSymbol, RFnSymbol);
-  memcpy(OldRKey, RKey, 40);
+  if ( keyboardAction(5, 8, RKey, OldRKey, RSymbol, RFnSymbol) == 1 )
+  {
+    releaseFuncKeyAction(5, 8, OldRKey, RFnSymbol);
+    releaseFuncKeyAction(5, 8, OldLKey, LFnSymbol);
+    memset( OldRKey, (char)OFF, 40 );
+    memset( OldLKey, (char)OFF, 40 );
+  }
+  else
+  {
+    memcpy(OldRKey, RKey, 40);
+  }
 
   char LKey[5][8];
   memset( LKey, (char)OFF, 40 );
   ParseLeftKey(LKey);
-  keyboardAction( 5, 8, LKey, OldLKey, LSymbol, LFnSymbol );
-  memcpy(OldLKey, LKey, 40);
+  if ( keyboardAction( 5, 8, LKey, OldLKey, LSymbol, LFnSymbol ) == 1 )
+  {
+    releaseFuncKeyAction(5, 8, OldRKey, RFnSymbol);
+    releaseFuncKeyAction(5, 8, OldLKey, LFnSymbol);
+    memset( OldRKey, (char)OFF, 40 );
+    memset( OldLKey, (char)OFF, 40 );
+  }
+  else
+  {
+    memcpy(OldLKey, LKey, 40);
+  }
 }
 
-void keyboardAction( int Row, int Col, char Parsed[][8], char OldParsed[][8], int Symbol[][8], int FnSymbol[][8] )
+// シンボルの検索、キーコードのプレス、リリースコードの発射を行います。
+// 戻り値 
+//  0:正常終了。
+//  1:ファンクションがリリースされた事を示す終了値。途中で処理が終了しています。
+int keyboardAction( int Row, int Col, char Parsed[][8], char OldParsed[][8], int Symbol[][8], int FnSymbol[][8] )
 {
   for ( int row = 0; row < Row; row++ )
   {
@@ -118,6 +138,7 @@ void keyboardAction( int Row, int Col, char Parsed[][8], char OldParsed[][8], in
         {
             IsFnEnable = false;
             TurnOffStatusLed(2);
+            return 1;
         }
         if ( IsFnEnable )
         {
@@ -130,6 +151,32 @@ void keyboardAction( int Row, int Col, char Parsed[][8], char OldParsed[][8], in
       }
     }
   }
+  return 0;
 }
+
+// Fnキーがリリースされた事によるアクション
+void releaseFuncKeyAction(int Row, int Col, char PressingKey[][8], int FnSymbol[][8])
+{
+  // 同時押しされていたキーをすべてリリースします。(Fnキーコードとしてリリースを発射します。)
+  for ( int row = 0; row < Row; row++ )
+  {
+    for ( int col = 0; col < Col; col++ )
+    {
+      if ( PressingKey[row][col] == ON ) 
+      {
+          Keyboard.release( FnSymbol[row][col] );
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
 
 
