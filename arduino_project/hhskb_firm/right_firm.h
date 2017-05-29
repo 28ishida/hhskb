@@ -2,6 +2,5 @@
 #define _RIGHT_FIRM_H_
 
 void InitRightFirm();
-int ParseRightKey(char** ans);
-
+int ParseRightKey(char ans[][8]);
 #endif

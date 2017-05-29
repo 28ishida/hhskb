@@ -41,7 +41,7 @@ void InitRightFirm()
 }
 
 // キーのパース 引数は5x8の行列分の領域を割り当て済である必要があります。
-int ParseRightKey(char** ans)
+int ParseRightKey(char ans[][8])
 {
   digitalWrite( IP1, LOW );
   ans[0][0] = digitalRead( OP1 );

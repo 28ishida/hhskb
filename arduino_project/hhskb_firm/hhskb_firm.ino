@@ -55,9 +55,6 @@ static int RFnSymbol[5][8] =
 // 右手用入力バッファ
 static char RKey[5][8];
 
-// 右手用入力バッファの列の先頭アドレスを格納する変数
-static char* RKeyBuf[5];
-
 // ひとつ前のパース結果を格納する変数
 static char OldRKey[5][8];
 
@@ -82,10 +79,7 @@ static int LFnSymbol[5][7] =
 };
 
 // 左手用入力バッファ
-static char LKey[5][7];
-
-// 左手用入力バッファの列の先頭アドレスを格納する変数
-static char* LKeyBuf[5];
+static char LKey[5][8];
 
 // ひとつ前のパース結果を格納する変数
 static char OldLKey[5][8];
@@ -93,16 +87,10 @@ static char OldLKey[5][8];
 void setup() {
   // put your setup code here, to run once:
   memset( RKey, (char)OFF, 40 );
-  memset( LKey, (char)OFF, 35 );
+  memset( LKey, (char)OFF, 40 );
   memset( OldRKey, (char)OFF, 40 );
-  memset( OldLKey, (char)OFF, 35 );
+  memset( OldLKey, (char)OFF, 40 );
 
-  // アドレス変数の初期化
-  for( int i = 0; i < 5; i++ )
-  {
-    RKeyBuf[i] = RKey[i];
-    LKeyBuf[i] = LKey[i];
-  }
   InitRightFirm();
   InitLeftFirm();
   
@@ -113,8 +101,8 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   // キーのパース
-  ParseRightKey(RKeyBuf);
-  ParseLeftKey(LKeyBuf);
+  ParseRightKey(RKey);
+  ParseLeftKey(LKey);
   
   for ( int row = 0; row < 5; row++ )
   {

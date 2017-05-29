@@ -45,7 +45,7 @@ void InitLeftFirm()
 }
 
 // キーのパース 引数は5x7の行列分の領域を割り当て済である必要があります。
-int ParseLeftKey(char** ans)
+int ParseLeftKey(char ans[][8])
 {
   // 左手パース
   expIO.Write(GPB, GPB0, LOW);
