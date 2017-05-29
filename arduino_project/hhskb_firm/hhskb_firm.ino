@@ -18,20 +18,6 @@ static const int PRTSC = 0xce;  // print screen?
 // ファンクションキー関連
 static bool IsFnEnable = false;
 
-// 左右定義
-enum RightLeft
-{
-  Right,
-  Left
-};
-
-// ボタンアクション
-enum ButtonAction
-{
-  TurnOn,
-  TurnOff
-};
-
 // 右手通常文字の配置定義
 static int RSymbol[5][8] = 
 {
@@ -52,42 +38,34 @@ static int RFnSymbol[5][8] =
   { SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL } 
 };
 
-// 右手用入力バッファ
-static char RKey[5][8];
-
 // ひとつ前のパース結果を格納する変数
 static char OldRKey[5][8];
-
-// 左手用シンボル
-static int LSymbol[5][7] =
-{
-  { KEY_ESC, '1', '2', '3', '4', '5', '6' },
-  { TAB, 'q', 'w', 'e', 'r', 't', NO_ASMBL },
-  { KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', NO_ASMBL },
-  { KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NO_ASMBL },
-  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_LEFT_ALT, KEY_LEFT_CTRL, NO_ASMBL }
-};
-
-// 左手用Fn押下時シンボル
-static int LFnSymbol[5][7] =
-{
-  { 0, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6 },
-  { 0, 0, 0, 0, 0, 0, NO_ASMBL },
-  { 0, 0, 0, 0, 0, 0, NO_ASMBL },
-  { 0, 0, 0, 0, 0, 0, NO_ASMBL },
-  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_LEFT_ALT, KEY_LEFT_CTRL, NO_ASMBL }
-};
-
-// 左手用入力バッファ
-static char LKey[5][8];
 
 // ひとつ前のパース結果を格納する変数
 static char OldLKey[5][8];
 
+// 左手用シンボル
+static int LSymbol[5][8] =
+{
+  { KEY_ESC, '1', '2', '3', '4', '5', '6', NO_ASMBL },
+  { TAB, 'q', 'w', 'e', 'r', 't', NO_ASMBL, NO_ASMBL },
+  { KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', NO_ASMBL, NO_ASMBL },
+  { KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NO_ASMBL, NO_ASMBL },
+  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_LEFT_ALT, KEY_LEFT_CTRL, NO_ASMBL, NO_ASMBL }
+};
+
+// 左手用Fn押下時シンボル
+static int LFnSymbol[5][8] =
+{
+  { 0, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, NO_ASMBL },
+  { 0, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
+  { 0, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
+  { 0, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
+  { NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_LEFT_ALT, KEY_LEFT_CTRL, NO_ASMBL, NO_ASMBL }
+};
+
 void setup() {
   // put your setup code here, to run once:
-  memset( RKey, (char)OFF, 40 );
-  memset( LKey, (char)OFF, 40 );
   memset( OldRKey, (char)OFF, 40 );
   memset( OldLKey, (char)OFF, 40 );
 
@@ -99,96 +77,59 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
-  // キーのパース
+  char RKey[5][8];
+  memset( RKey, (char)OFF, 40 );
   ParseRightKey(RKey);
+  keyboardAction(5, 8, RKey, OldRKey, RSymbol, RFnSymbol);
+  memcpy(OldRKey, RKey, 40);
+
+  char LKey[5][8];
+  memset( LKey, (char)OFF, 40 );
   ParseLeftKey(LKey);
-  
-  for ( int row = 0; row < 5; row++ )
+  keyboardAction( 5, 8, LKey, OldLKey, LSymbol, LFnSymbol );
+  memcpy(OldLKey, LKey, 40);
+}
+
+void keyboardAction( int Row, int Col, char Parsed[][8], char OldParsed[][8], int Symbol[][8], int FnSymbol[][8] )
+{
+  for ( int row = 0; row < Row; row++ )
   {
-    for ( int col = 0; col < 8; col++ )
+    for ( int col = 0; col < Col; col++ )
     {
-      if ( ( RKey[row][col] == ON ) && ( OldRKey[row][col] == OFF ) )
+      if ( ( Parsed[row][col] == ON ) && ( OldParsed[row][col] == OFF ) )
       {
-        if ( RSymbol[row][col] == Fn )
+        if ( Symbol[row][col] == Fn )
         {
             IsFnEnable = true;
             TurnOnStatusLed(2);
         }
-        keyboardAction(row, col, Right, TurnOn );
-        OldRKey[row][col] = ON;
+        if ( IsFnEnable )
+        {
+          Keyboard.press( FnSymbol[row][col] );
+        }
+        else
+        {
+          Keyboard.press( Symbol[row][col] );
+        }
       }
-
-      if ( ( OldRKey[row][col] == ON ) && ( RKey[row][col] == OFF ) )
+      else if ( ( Parsed[row][col] == OFF ) && ( OldParsed[row][col] == ON ) )
       {
-        if ( RSymbol[row][col] == Fn )
+        if ( Symbol[row][col] == Fn )
         {
             IsFnEnable = false;
             TurnOffStatusLed(2);
         }
-        keyboardAction(row, col, Right, TurnOff);      
-        OldRKey[row][col] = OFF;
-      }
-    }
-  }
-
-  for ( int row = 0; row < 5; row++ )
-  {
-    for ( int col = 0; col < 7; col++ )
-    {
-      if ( ( LKey[row][col] == ON ) && ( OldLKey[row][col] == OFF ) )
-      {
-        keyboardAction(row, col, Left, TurnOn);
-        OldLKey[row][col] = ON;
-      }
-      if ( ( OldLKey[row][col] == ON ) && ( LKey[row][col] == OFF ) )
-      {
-        keyboardAction(row, col, Left, TurnOff);
-        OldLKey[row][col] = OFF;
+        if ( IsFnEnable )
+        {
+          Keyboard.release( FnSymbol[row][col] );
+        }
+        else
+        {
+          Keyboard.release( Symbol[row][col] );
+        }
       }
     }
   }
 }
 
-static void ReleaseAllKey()
-{
-  Keyboard.releaseAll();
-  memset( OldRKey, (char)OFF, 40 );
-  memset( OldLKey, (char)OFF, 35 );
-}
 
-static void keyboardAction(int row, int col, RightLeft lr, ButtonAction ba)
-{
-  int tgtCode = 0;
-  if ( lr == Right)
-  {
-    if (!IsFnEnable )
-    {
-      tgtCode = RSymbol[row][col];
-    }
-    else
-    {
-      tgtCode = RFnSymbol[row][col];
-    }
-  }
-  else
-  {
-    if (!IsFnEnable )
-    {
-      tgtCode = LSymbol[row][col];
-    }
-    else
-    {
-      tgtCode = LFnSymbol[row][col];
-    }
-  }
-
-  if ( ba == TurnOn )
-  {
-    Keyboard.press(tgtCode);
-  }
-  else
-  {
-    Keyboard.release(tgtCode);
-  }
-}
