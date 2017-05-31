@@ -24,6 +24,17 @@ static int RFnSymbol[ROWMAX][COLMAX] =
 	{ SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL }
 };
 
+// 右手ワンショット用テーブル
+// 一つのキーが押下されて離されるまで他のキーが押下されなかった時に発射されるシンボル
+static int ROSymbol[ROWMAX][COLMAX] =
+{
+	{ 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0, 0, 0, NO_ASMBL },
+	{ 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, NO_ASMBL, 0, NO_ASMBL, NO_ASMBL, NO_ASMBL },
+};
+
 // 左手用シンボル
 static int LSymbol[ROWMAX][COLMAX] =
 {
@@ -45,17 +56,32 @@ static int LFnSymbol[ROWMAX][COLMAX] =
 	{ NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_LEFT_ALT, KEY_LEFT_CTRL, NO_ASMBL, NO_ASMBL }
 };
 
+// 左手ワンショット用テーブル
+// 一つのキーが押下されて離されるまで他のキーが押下されなかった時に発射されるシンボル
+static int LOSymbol[ROWMAX][COLMAX] =
+{
+	{ 0, 0, 0, 0, 0, 0, 0, NO_ASMBL },
+	{ 0, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
+	{ 0, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
+	{ 0, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
+	{ NO_ASMBL, NO_ASMBL, 0, 0, 0, SPC, NO_ASMBL, NO_ASMBL },
+};
+
 // Fnキー状態
 static bool IsFnEnable = false;
 
-// 今のキー状態
+// 現在のキー状態
 static char RKey[ROWMAX][COLMAX];
 static char LKey[ROWMAX][COLMAX];
 
-// ひとつ前のパース結果を格納する変数
+// ひとつ前のキー状態のバッファ
 static char OldRKey[ROWMAX][COLMAX];
 static char OldLKey[ROWMAX][COLMAX];
 
+// ワンショットが実行される際に発行されるコードの予約値
+static int OneShotReserveCode = 0;
+// ワンショットが実行されなかった際に発行されるコードの予約値
+static int OneShotCancelReserveCode = 0;
 void setup() {
 	// put your setup code here, to run once:
 	memset(OldRKey, (char)OFF, SUM);
@@ -85,35 +111,85 @@ void loop() {
 static void keyboardAction(LorR lr)
 {
 	int tgt = 0;
+	int oTgt = 0;
 	for (int row = 0; row < ROWMAX; row++)
 	{
 		for (int col = 0; col < COLMAX; col++)
 		{
 			if (isTurnOn(row, col, lr))
 			{
-				if ((tgt = getSymbol(row, col, lr, IsFnEnable)) == Fn)
+				if (oneShotReserve(row, col, lr) == 0)
 				{
-					IsFnEnable = true;
-					TurnOnStatusLed(2);
-				}
-				else
-				{
-					Keyboard.press(tgt);
+					if ((tgt = getSymbol(row, col, lr, IsFnEnable)) == Fn)
+					{
+						IsFnEnable = true;
+						TurnOnStatusLed(2);
+					}
+					else
+					{
+						Keyboard.press(tgt);
+					}
 				}
 			}
 			else if (isTurnOff(row, col, lr))
-			{			
-				if ((tgt = getSymbol(row, col, lr, IsFnEnable)) == Fn)
+			{
+				if (oneShotAction(row, col, lr) == 0)
 				{
-					forceClear();			// IsFnEnableの前に実施する事が大事
-					IsFnEnable = false;
-					TurnOffStatusLed(2);
-				}
-				else
-				{
-					Keyboard.release(tgt);
+					if ((tgt = getSymbol(row, col, lr, IsFnEnable)) == Fn)
+					{
+						forceClear();			// IsFnEnableの前に実施する事が大事
+						IsFnEnable = false;
+						TurnOffStatusLed(2);
+					}
+					else
+					{
+						Keyboard.release(tgt);
+					}
 				}
 			}
+		}
+	}
+}
+
+// OneShot予約
+// 戻り値:
+//  0 OneShot予約は動かなかった。以後通常の処理を行う
+//  1 OneShot予約が動いた。以後通常の処理は行わなくてOK。
+static int oneShotReserve(int row, int col, LorR lr)
+{
+	int ret = 0;
+	if (OneShotReserveCode != 0)	// 予約済のところに新しい予約 = 予約はキャンセルされ新しいコードは通常の値として処理される
+	{
+		Keyboard.press(OneShotCancelReserveCode);  
+		OneShotReserveCode = 0;
+		OneShotCancelReserveCode = 0;
+	}
+	else
+	{
+		int oTgt = getOneShotSymbol(row, col, lr);
+		if ((oTgt != 0) && (oTgt != NO_ASMBL))
+		{
+			OneShotReserveCode = oTgt;
+			OneShotCancelReserveCode = getSymbol(row, col, lr, IsFnEnable);
+			ret = 1;
+		}
+	}
+	return ret;
+}
+
+// OneShotの実行 
+static int oneShotAction(int row, int col, LorR lr)
+{
+	if (OneShotReserveCode != 0)
+	{
+		int oTgt = getOneShotSymbol(row, col, lr);
+		if (oTgt == OneShotReserveCode)
+		{
+			//Keyboard.press(OneShotReserveCode);
+			//Keyboard.release(OneShotReserveCode);
+			Keyboard.write(OneShotReserveCode);
+			OneShotReserveCode = 0;
+			OneShotCancelReserveCode = 0;
 		}
 	}
 }
@@ -199,7 +275,19 @@ static int getSymbol(int row, int col, LorR lr, bool isFn)
 	return ret;
 }
 
-
+static int getOneShotSymbol(int row, int col, LorR lr)
+{
+	int ret = 0;
+	if (lr == Left)
+	{
+		ret = LOSymbol[row][col];
+	}
+	else
+	{
+		ret = ROSymbol[row][col];
+	}
+	return ret;
+}
 
 
 
