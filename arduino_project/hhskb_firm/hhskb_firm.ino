@@ -2,7 +2,9 @@
 #include "right_firm.h"
 #include "left_firm.h"
 
-static void ReleaseAllKey();
+#define ROWMAX  5
+#define COLMAX  8
+static const int SUM = 40;
 
 // 一般的な定義
 static const int OFF = 1;
@@ -19,7 +21,7 @@ static const int PRTSC = 0xce;  // print screen?
 static bool IsFnEnable = false;
 
 // 右手通常文字の配置定義
-static int RSymbol[5][8] =
+static int RSymbol[ROWMAX][COLMAX] =
 {
   { '7', '8', '9', '0', '-', '=', '\\', '`' },
   { 'y', 'u', 'i', 'o', 'p', '[', ']', KEY_DELETE },
@@ -29,7 +31,7 @@ static int RSymbol[5][8] =
 };
 
 // 右手用ファンクション押下時シンボル
-static int RFnSymbol[5][8] =
+static int RFnSymbol[ROWMAX][COLMAX] =
 {
   { KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_INSERT, KEY_DELETE },
   { 0, 0, PRTSC, 0, 0, KEY_UP_ARROW, 0, KEY_BACKSPACE },
@@ -39,11 +41,11 @@ static int RFnSymbol[5][8] =
 };
 
 // ひとつ前のパース結果を格納する変数
-static char OldRKey[5][8];
-static char OldLKey[5][8];
+static char OldRKey[ROWMAX][COLMAX];
+static char OldLKey[ROWMAX][COLMAX];
 
 // 左手用シンボル
-static int LSymbol[5][8] =
+static int LSymbol[ROWMAX][COLMAX] =
 {
   { KEY_ESC, '1', '2', '3', '4', '5', '6', NO_ASMBL },
   { TAB, 'q', 'w', 'e', 'r', 't', NO_ASMBL, NO_ASMBL },
@@ -53,7 +55,7 @@ static int LSymbol[5][8] =
 };
 
 // 左手用Fn押下時シンボル
-static int LFnSymbol[5][8] =
+static int LFnSymbol[ROWMAX][COLMAX] =
 {
   { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, NO_ASMBL },
   { TAB, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
@@ -64,8 +66,8 @@ static int LFnSymbol[5][8] =
 
 void setup() {
 	// put your setup code here, to run once:
-	memset(OldRKey, (char)OFF, 40);
-	memset(OldLKey, (char)OFF, 40);
+	memset(OldRKey, (char)OFF, SUM);
+	memset(OldLKey, (char)OFF, SUM);
 
 	InitRightFirm();
 	InitLeftFirm();
@@ -75,34 +77,34 @@ void setup() {
 
 void loop() {
 	// put your main code here, to run repeatedly:
-	char RKey[5][8];
-	memset(RKey, (char)OFF, 40);
+	char RKey[ROWMAX][COLMAX];
+	memset(RKey, (char)OFF, SUM);
 	ParseRightKey(RKey);
-	if (keyboardAction(5, 8, RKey, OldRKey, RSymbol, RFnSymbol) == 1)
+	if (keyboardAction(RKey, OldRKey, RSymbol, RFnSymbol) == 1)
 	{
-		releaseFuncKeyAction(5, 8, OldRKey, RFnSymbol);
-		releaseFuncKeyAction(5, 8, OldLKey, LFnSymbol);
-		memset(OldRKey, (char)OFF, 40);
-		memset(OldLKey, (char)OFF, 40);
+		releaseFuncKeyAction(OldRKey, RFnSymbol);
+		releaseFuncKeyAction(OldLKey, LFnSymbol);
+		memset(OldRKey, (char)OFF, SUM);
+		memset(OldLKey, (char)OFF, SUM);
 	}
 	else
 	{
-		memcpy(OldRKey, RKey, 40);
+		memcpy(OldRKey, RKey, SUM);
 	}
 
-	char LKey[5][8];
-	memset(LKey, (char)OFF, 40);
+	char LKey[ROWMAX][COLMAX];
+	memset(LKey, (char)OFF, SUM);
 	ParseLeftKey(LKey);
-	if (keyboardAction(5, 8, LKey, OldLKey, LSymbol, LFnSymbol) == 1)
+	if (keyboardAction(LKey, OldLKey, LSymbol, LFnSymbol) == 1)
 	{
-		releaseFuncKeyAction(5, 8, OldRKey, RFnSymbol);
-		releaseFuncKeyAction(5, 8, OldLKey, LFnSymbol);
-		memset(OldRKey, (char)OFF, 40);
-		memset(OldLKey, (char)OFF, 40);
+		releaseFuncKeyAction(OldRKey, RFnSymbol);
+		releaseFuncKeyAction(OldLKey, LFnSymbol);
+		memset(OldRKey, (char)OFF, SUM);
+		memset(OldLKey, (char)OFF, SUM);
 	}
 	else
 	{
-		memcpy(OldLKey, LKey, 40);
+		memcpy(OldLKey, LKey, SUM);
 	}
 }
 
@@ -110,11 +112,11 @@ void loop() {
 // 戻り値 
 //  0:正常終了。
 //  1:ファンクションがリリースされた事を示す終了値。途中で処理が終了しています。
-int keyboardAction(int Row, int Col, char Parsed[][8], char OldParsed[][8], int Symbol[][8], int FnSymbol[][8])
+int keyboardAction(char Parsed[][COLMAX], char OldParsed[][COLMAX], int Symbol[][COLMAX], int FnSymbol[][COLMAX])
 {
-	for (int row = 0; row < Row; row++)
+	for (int row = 0; row < ROWMAX; row++)
 	{
-		for (int col = 0; col < Col; col++)
+		for (int col = 0; col < COLMAX; col++)
 		{
 			if ((Parsed[row][col] == ON) && (OldParsed[row][col] == OFF))
 			{
@@ -155,12 +157,12 @@ int keyboardAction(int Row, int Col, char Parsed[][8], char OldParsed[][8], int 
 }
 
 // Fnキーがリリースされた事によるアクション
-void releaseFuncKeyAction(int Row, int Col, char PressingKey[][8], int FnSymbol[][8])
+void releaseFuncKeyAction(char PressingKey[][COLMAX], int FnSymbol[][COLMAX])
 {
 	// 同時押しされていたキーをすべてリリースします。(Fnキーコードとしてリリースを発射します。)
-	for (int row = 0; row < Row; row++)
+	for (int row = 0; row < ROWMAX; row++)
 	{
-		for (int col = 0; col < Col; col++)
+		for (int col = 0; col < COLMAX; col++)
 		{
 			if (PressingKey[row][col] == ON)
 			{
