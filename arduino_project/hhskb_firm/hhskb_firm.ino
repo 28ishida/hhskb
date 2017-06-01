@@ -219,8 +219,6 @@ static void forceClear()
 			}
 		}
 	}
-	memset(OldRKey, (char)OFF, SUM);
-	memset(OldLKey, (char)OFF, SUM);
 }
 
 // キーが今越されたかを判定する
