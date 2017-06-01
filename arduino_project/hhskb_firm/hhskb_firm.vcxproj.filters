@@ -27,6 +27,9 @@
     <ClInclude Include="right_firm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hhskb_firm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="left_firm.cpp">

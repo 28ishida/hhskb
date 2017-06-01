@@ -155,6 +155,8 @@ static void keyboardAction(LorR lr)
 // 戻り値:
 //  0 OneShot予約は動かなかった。以後通常の処理を行う
 //  1 OneShot予約が動いた。以後通常の処理は行わなくてOK。
+// 引数: 
+//  今押下されたキーの位置情報
 static int oneShotReserve(int row, int col, LorR lr)
 {
 	int ret = 0;
@@ -178,20 +180,26 @@ static int oneShotReserve(int row, int col, LorR lr)
 }
 
 // OneShotの実行 
+// 戻り値:
+//  0 OneShotが実行されなかった。以後通常の処理を行う
+//  1 OneShotが実行された。以後通常の処理を行わなくてOK。
+// 引数: 
+//  今リリースされたキーの位置情報
 static int oneShotAction(int row, int col, LorR lr)
 {
+	int ret = 0;
 	if (OneShotReserveCode != 0)
 	{
 		int oTgt = getOneShotSymbol(row, col, lr);
 		if (oTgt == OneShotReserveCode)
 		{
-			//Keyboard.press(OneShotReserveCode);
-			//Keyboard.release(OneShotReserveCode);
 			Keyboard.write(OneShotReserveCode);
 			OneShotReserveCode = 0;
 			OneShotCancelReserveCode = 0;
+			ret = 1;
 		}
 	}
+	return ret;
 }
 
 // 左右すべての押下中のキーをすべてクリアします
@@ -259,7 +267,6 @@ static int getSymbol(int row, int col, LorR lr, bool isFn)
 		{
 			ret = LFnSymbol[row][col];
 		}
-
 	}
 	else
 	{
