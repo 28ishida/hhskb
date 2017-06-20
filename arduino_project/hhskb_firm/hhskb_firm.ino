@@ -82,6 +82,9 @@ static char OldLKey[ROWMAX][COLMAX];
 static int OneShotReserveCode = 0;
 // ワンショットが実行されなかった際に発行されるコードの予約値
 static int OneShotCancelReserveCode = 0;
+// ワンショットが生きているループ数
+static int OneShotActiveCounter = 0;
+
 void setup() {
 	// put your setup code here, to run once:
 	memset(OldRKey, (char)OFF, SUM);
@@ -105,6 +108,8 @@ void loop() {
 	memcpy(OldRKey, RKey, SUM);
 	keyboardAction(Left);
 	memcpy(OldLKey, LKey, SUM);
+
+	oneShotActiveCounterExec();
 }
 
 // 左右どちらかのモジュールに対してシンボルの検索、キーコードのプレス/リリースの発射を行います。
@@ -120,7 +125,7 @@ static void keyboardAction(LorR lr)
 			{
 				if (oneShotReserve(row, col, lr) == 0)
 				{
-					if ((tgt = getSymbol(row, col, lr, IsFnEnable)) == Fn)
+					if ((tgt = getSymbol(row, col, lr)) == Fn)
 					{
 						IsFnEnable = true;
 						TurnOnStatusLed(2);
@@ -135,7 +140,7 @@ static void keyboardAction(LorR lr)
 			{
 				if (oneShotAction(row, col, lr) == 0)
 				{
-					if ((tgt = getSymbol(row, col, lr, IsFnEnable)) == Fn)
+					if ((tgt = getSymbol(row, col, lr)) == Fn)
 					{
 						forceClear();			// IsFnEnableの前に実施する事が大事
 						IsFnEnable = false;
@@ -151,7 +156,7 @@ static void keyboardAction(LorR lr)
 	}
 }
 
-// OneShot予約
+// OneShot予約 (古いOneShotのキャンセル)
 // 戻り値:
 //  0 OneShot予約は動かなかった。以後通常の処理を行う
 //  1 OneShot予約が動いた。以後通常の処理は行わなくてOK。
@@ -160,11 +165,9 @@ static void keyboardAction(LorR lr)
 static int oneShotReserve(int row, int col, LorR lr)
 {
 	int ret = 0;
-	if (OneShotReserveCode != 0)	// 予約済のところに新しい予約 = 予約はキャンセルされ新しいコードは通常の値として処理される
+	if (isOneShotReserved())	// 予約済のところに新しい予約 = 予約はキャンセルされ新しいコードは通常の値として処理される
 	{
-		Keyboard.press(OneShotCancelReserveCode);  
-		OneShotReserveCode = 0;
-		OneShotCancelReserveCode = 0;
+		execOneShotCancel();
 	}
 	else
 	{
@@ -172,7 +175,8 @@ static int oneShotReserve(int row, int col, LorR lr)
 		if ((oTgt != 0) && (oTgt != NO_ASMBL))
 		{
 			OneShotReserveCode = oTgt;
-			OneShotCancelReserveCode = getSymbol(row, col, lr, IsFnEnable);
+			OneShotCancelReserveCode = getSymbol(row, col, lr);
+			OneShotActiveCounter = ACTIVE_LOOP;
 			ret = 1;
 		}
 	}
@@ -188,14 +192,12 @@ static int oneShotReserve(int row, int col, LorR lr)
 static int oneShotAction(int row, int col, LorR lr)
 {
 	int ret = 0;
-	if (OneShotReserveCode != 0)
+	if (isOneShotReserved())
 	{
 		int oTgt = getOneShotSymbol(row, col, lr);
 		if (oTgt == OneShotReserveCode)
 		{
-			Keyboard.write(OneShotReserveCode);
-			OneShotReserveCode = 0;
-			OneShotCancelReserveCode = 0;
+			execOneShot();
 			ret = 1;
 		}
 	}
@@ -211,11 +213,11 @@ static void forceClear()
 		{
 			if (OldRKey[row][col] == ON)
 			{
-				Keyboard.release(getSymbol(row, col, Right, IsFnEnable));
+				Keyboard.release(getSymbol(row, col, Right));
 			}
 			if (OldLKey[row][col] == ON)
 			{
-				Keyboard.release(getSymbol(row, col, Left, IsFnEnable));
+				Keyboard.release(getSymbol(row, col, Left));
 			}
 		}
 	}
@@ -252,12 +254,12 @@ static bool isTurnOff(int row, int col, LorR lr)
 }
 
 // キーシンボルを取得
-static int getSymbol(int row, int col, LorR lr, bool isFn)
+static int getSymbol(int row, int col, LorR lr)
 {
 	int ret = 0;
 	if (lr == Left)
 	{
-		if (!isFn)
+		if (!IsFnEnable)
 		{
 			ret = LSymbol[row][col];
 		}
@@ -268,7 +270,7 @@ static int getSymbol(int row, int col, LorR lr, bool isFn)
 	}
 	else
 	{
-		if (!isFn)
+		if (!IsFnEnable)
 		{
 			ret = RSymbol[row][col];
 		}
@@ -294,9 +296,52 @@ static int getOneShotSymbol(int row, int col, LorR lr)
 	return ret;
 }
 
+// ワンショットカウンタの処理
+static int  oneShotActiveCounterExec()
+{
+	if (isOneShotReserved())
+	{
+		if (OneShotActiveCounter != 0)
+		{
+			OneShotActiveCounter--;
+		}
+		else
+		{
+			// ワンショットの自動キャンセル
+			execOneShotCancel();
+		}
+	}
+}
 
+// ワンショットが予約されているか
+static bool isOneShotReserved()
+{
+	return OneShotReserveCode != 0;
+}
 
+// ワンショットのキャンセル
+static void execOneShotCancel()
+{
+	if (isOneShotReserved())
+	{
+		Keyboard.press(OneShotCancelReserveCode);
+		OneShotReserveCode = 0;
+		OneShotCancelReserveCode = 0;
+		OneShotActiveCounter = 0;
+	}
+}
 
+// ワンショットの実行
+static void execOneShot()
+{
+	if (isOneShotReserved())
+	{
+		Keyboard.write(OneShotReserveCode);
+		OneShotReserveCode = 0;
+		OneShotCancelReserveCode = 0;
+		OneShotActiveCounter = 0;
+	}
+}
 
 
 
