@@ -328,6 +328,7 @@ static void execOneShotCancel()
 		OneShotReserveCode = 0;
 		OneShotCancelReserveCode = 0;
 		OneShotActiveCounter = 0;
+		delay(1);
 	}
 }
 
