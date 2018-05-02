@@ -2,6 +2,7 @@
 #include "hhskb_firm.h"
 #include "right_firm.h"
 #include "left_firm.h"
+#include "key_definition.h"
 
 // 右手通常文字の配置定義
 static int RSymbol[ROWMAX][COLMAX] =
@@ -10,7 +11,7 @@ static int RSymbol[ROWMAX][COLMAX] =
 	{ 'y', 'u', 'i', 'o', 'p', '[', ']', KEY_DELETE },
 	{ 'h', 'j', 'k', 'l', ';', '\'', KEY_RETURN, NO_ASMBL },
 	{ 'b', 'n', 'm', ',', '.', '/', KEY_RIGHT_SHIFT, Fn },
-	{ SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL }
+	{ KEY_RIGHT_CTRL, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL }
 };
 
 // 右手用ファンクション押下時シンボル 
@@ -32,7 +33,7 @@ static int ROSymbol[ROWMAX][COLMAX] =
 	{ 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, NO_ASMBL },
 	{ 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, NO_ASMBL, 0, NO_ASMBL, NO_ASMBL, NO_ASMBL },
+	{ SPC, 0, 0, NO_ASMBL, 0, NO_ASMBL, NO_ASMBL, NO_ASMBL },
 };
 
 // 左手用シンボル
