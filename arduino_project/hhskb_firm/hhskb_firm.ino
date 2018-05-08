@@ -16,6 +16,16 @@ static char LKey[ROWMAX][COLMAX];
 static char OldRKey[ROWMAX][COLMAX];
 static char OldLKey[ROWMAX][COLMAX];
 
+// 発射予約キー
+static char RsvdOnKey[RESERVED_MAX];
+static char RsvdOnModKey[RESERVED_MAX];
+static char RsvdOffKey[RESERVED_MAX];
+static char RsvdOffModKey[RESERVED_MAX];
+
+
+// ワンショットの予約
+static bool OneShotReserveR[ROWMAX][COLMAX];
+
 // ワンショットが実行される際に発行されるコードの予約値
 static int OneShotReserveCode = 0;
 // ワンショットが実行されなかった際に発行されるコードの予約値
@@ -43,11 +53,13 @@ void loop() {
 	ParseLeftKey(LKey);
 
 	keyboardAction(Right);
-	memcpy(OldRKey, RKey, SUM);
+	memcpy(OldRKey, RKey, SUM);  
 	keyboardAction(Left);
 	memcpy(OldLKey, LKey, SUM);
 
-	oneShotActiveCounterExec();
+	//oneShotActiveCounterExec();
+
+	sendCode();
 }
 
 // 左右どちらかのモジュールに対してシンボルの検索、キーコードのプレス/リリースの発射を行います。
@@ -61,37 +73,168 @@ static void keyboardAction(LorR lr)
 		{
 			if (isTurnOn(row, col, lr))
 			{
-				if (oneShotReserve(row, col, lr) == 0)
+				if ((tgt = getSymbol(row, col, lr)) == Fn)
 				{
-					if ((tgt = getSymbol(row, col, lr)) == Fn)
-					{
-						IsFnEnable = true;
-						TurnOnStatusLed(2);
-					}
-					else
-					{
-						Keyboard.press(tgt);
-					}
+					IsFnEnable = true;
+					TurnOnStatusLed(2);
 				}
+				else
+				{
+					reserveKey(tgt, true);
+				}
+
 			}
 			else if (isTurnOff(row, col, lr))
 			{
-				if (oneShotAction(row, col, lr) == 0)
+				if ((tgt = getSymbol(row, col, lr)) == Fn)
 				{
-					if ((tgt = getSymbol(row, col, lr)) == Fn)
-					{
-						forceClear();			// IsFnEnableの前に実施する事が大事
-						IsFnEnable = false;
-						TurnOffStatusLed(2);
-					}
-					else
-					{
-						Keyboard.release(tgt);
-					}
+					forceClear();			// IsFnEnableの前に実施する事が大事
+					IsFnEnable = false;
+					TurnOffStatusLed(2);
+				}
+				else
+				{
+					reserveKey(tgt, false);
 				}
 			}
 		}
 	}
+}
+
+// 予約されたキーを一気に送ります
+static void sendCode()
+{
+	// 押す方は修飾キーから押す
+	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
+	{
+		if (RsvdOnModKey[cnt] == 0)
+		{
+			break;
+		}
+		else
+		{
+			Keyboard.press(RsvdOnModKey[cnt]);
+		}
+	}
+	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
+	{
+		if (RsvdOnKey[cnt] == 0)
+		{
+			break;
+		}
+		else
+		{
+			Keyboard.press(RsvdOnKey[cnt]);
+		}
+	}
+	
+	// 離すほうは通常キーから離す
+	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
+	{
+		if (RsvdOffKey[cnt] == 0)
+		{
+			break;
+		}
+		else
+		{
+			Keyboard.release(RsvdOffKey[cnt]);
+		}
+	}
+	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
+	{
+		if (RsvdOffModKey[cnt] == 0)
+		{
+			break;
+		}
+		else
+		{
+			Keyboard.release(RsvdOffModKey[cnt]);
+		}
+	}
+	memset(RsvdOffKey, 0, sizeof(char)*RESERVED_MAX);
+	memset(RsvdOffModKey, 0, sizeof(char)*RESERVED_MAX);
+	memset(RsvdOnKey, 0, sizeof(char)*RESERVED_MAX);
+	memset(RsvdOnModKey, 0, sizeof(char)*RESERVED_MAX);
+}
+
+// 発射予約
+static void reserveKey(int tgt, bool isOn)
+{
+	if (isOn)
+	{
+		if (isModifier(tgt))
+		{
+			reserveKeyPrimitive(RsvdOnModKey, tgt);
+		}
+		else
+		{
+			reserveKeyPrimitive(RsvdOnKey, tgt);
+		}
+	}
+	else
+	{
+		if (isModifier(tgt))
+		{
+			reserveKeyPrimitive(RsvdOffModKey, tgt);
+		}
+		else
+		{
+			reserveKeyPrimitive(RsvdOffKey, tgt);
+		}
+
+	}
+}
+
+// 予約の実体
+static void reserveKeyPrimitive(char keyArray[], int val)
+{
+	// 予約満帆なら無視でいいや
+	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
+	{
+		if (keyArray[cnt] == 0)
+		{
+			keyArray[cnt] = val;
+		}
+	}
+}
+
+// ModShotの定義があるか
+static bool hasModShot(int row, int col, LorR lr)
+{
+	bool ret = false;
+	int val = getModShotSymbol(row, col, lr);
+	if ((val != NOP_) && (val != NASB))
+	{
+		ret = true;
+	}
+	return ret;
+}
+
+// 今回のシーケンスでONになったキーの数
+static int ternOnKeyCount(LorR lr)
+{
+	int cnt = 0;
+	for (int row = 0; row < ROWMAX; row++)
+	{
+		for (int col = 0; col < COLMAX; col++)
+		{
+			if (lr == Right)
+			{
+				if ((RKey[row][col]) && (!OldRKey[row][col]))
+				{
+					cnt++;
+				}
+			}
+			else
+			{
+				if ((LKey[row][col]) && (!OldLKey[row][col]))
+				{
+					cnt++;
+				}
+			}
+		}
+	}
+	return cnt;
 }
 
 // OneShot予約 (古いOneShotのキャンセル)
@@ -109,8 +252,8 @@ static int oneShotReserve(int row, int col, LorR lr)
 	}
 	else
 	{
-		int oTgt = getOneShotSymbol(row, col, lr);
-		if ((oTgt != 0) && (oTgt != NO_ASMBL))
+		int oTgt = getModShotSymbol(row, col, lr);
+		if ((oTgt != 0) && (oTgt != NASB))
 		{
 			OneShotReserveCode = oTgt;
 			OneShotCancelReserveCode = getSymbol(row, col, lr);
@@ -132,7 +275,7 @@ static int oneShotAction(int row, int col, LorR lr)
 	int ret = 0;
 	if (isOneShotReserved())
 	{
-		int oTgt = getOneShotSymbol(row, col, lr);
+		int oTgt = getModShotSymbol(row, col, lr);
 		if (oTgt == OneShotReserveCode)
 		{
 			execOneShot();
@@ -220,16 +363,32 @@ static int getSymbol(int row, int col, LorR lr)
 	return ret;
 }
 
-static int getOneShotSymbol(int row, int col, LorR lr)
+// 修飾キーかどうか
+static bool isModifier(int tgt)
+{
+	bool ret = false;
+	if ((tgt == RSFT) ||
+		(tgt == LSFT) ||
+		(tgt == RCTL) ||
+		(tgt == LCTL) ||
+		(tgt == RALT) ||
+		(tgt == LALT))
+	{
+		ret = true;
+	}
+	return ret;
+}
+
+static int getModShotSymbol(int row, int col, LorR lr)
 {
 	int ret = 0;
 	if (lr == Left)
 	{
-		ret = LOSymbol[row][col];
+		ret = LModSymbol[row][col];
 	}
 	else
 	{
-		ret = ROSymbol[row][col];
+		ret = RModSymbol[row][col];
 	}
 	return ret;
 }

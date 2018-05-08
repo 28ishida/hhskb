@@ -22,7 +22,7 @@ static int RFnSymbol[ROWMAX][COLMAX] =
 };
 
 // 右手修飾キー
-// 同時押しで発動する修飾キー
+// 同時押しで発動する修飾キー。修飾キーしか格納出来ません。
 static int RModSymbol[ROWMAX][COLMAX] =
 {
 	{ NOP_, NOP_, NOP_, NOP_, NOP_, NOP_, NOP_, NOP_ },
@@ -39,7 +39,7 @@ static int LSymbol[ROWMAX][COLMAX] =
 	{ TAB_, 'q',  'w',  'e',  'r',  't',  NASB, NASB },
 	{ LCTL, 'a',  's',  'd',  'f',  'g',  NASB, NASB },
 	{ LSFT, 'z',  'x',  'c',  'v',  'b',  NASB, NASB },
-	{ NASB, NASB, LGUI, NOP_, LALT, LCTL, NASB, NASB }
+	{ NASB, NASB, LGUI, NOP_, LALT, SPC_, NASB, NASB }
 };
 
 // 左手用Fn押下時シンボル
@@ -53,13 +53,13 @@ static int LFnSymbol[ROWMAX][COLMAX] =
 	{ NASB, NASB, LGUI, NOP_, LALT, LCTL, NASB, NASB }
 };
 
-// 左手ワンショット用テーブル
-// 一つのキーが押下されて離されるまで他のキーが押下されなかった時に発射されるシンボル
-static int LOSymbol[ROWMAX][COLMAX] =
+// 左手修飾キー
+// 同時押しで発動する修飾キー。修飾キーしか格納できません
+static int LModSymbol[ROWMAX][COLMAX] =
 {
 	{ NOP_, NOP_, NOP_, NOP_, NOP_, NOP_, NOP_, NASB },
 	{ NOP_, NOP_, NOP_, NOP_, NOP_, NOP_, NASB, NASB },
 	{ NOP_, NOP_, NOP_, NOP_, NOP_, NOP_, NASB, NASB },
 	{ NOP_, NOP_, NOP_, NOP_, NOP_, NOP_, NASB, NASB },
-	{ NASB, NASB, NOP_, NOP_, NOP_, SPC_, NASB, NASB },
+	{ NASB, NASB, NOP_, NOP_, NOP_, LCTL, NASB, NASB },
 };

@@ -22,6 +22,9 @@ static const int PRTSC = 0xce;  // print screen?
 #define COLMAX  8
 static const int SUM = 40;
 
+#define RESERVED_MAX 10
+
+
 // ワンショットを活かすループ数 
 // このループ数が経過すると自動的にワンショットはキャンセルされます
 // 感覚的に10カウントで0.3秒以下。

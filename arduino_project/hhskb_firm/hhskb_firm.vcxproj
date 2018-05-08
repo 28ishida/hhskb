@@ -81,6 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hhskb_firm.h" />
+    <ClInclude Include="key_definition.h" />
+    <ClInclude Include="key_map.h" />
     <ClInclude Include="left_firm.h">
       <FileType>CppCode</FileType>
     </ClInclude>
