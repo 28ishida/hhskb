@@ -3,70 +3,7 @@
 #include "right_firm.h"
 #include "left_firm.h"
 #include "key_definition.h"
-
-// 右手通常文字の配置定義
-static int RSymbol[ROWMAX][COLMAX] =
-{
-	{ '7', '8', '9', '0', '-', '=', '\\', '`' },
-	{ 'y', 'u', 'i', 'o', 'p', '[', ']', KEY_DELETE },
-	{ 'h', 'j', 'k', 'l', ';', '\'', KEY_RETURN, NO_ASMBL },
-	{ 'b', 'n', 'm', ',', '.', '/', KEY_RIGHT_SHIFT, Fn },
-	{ KEY_RIGHT_CTRL, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL }
-};
-
-// 右手用ファンクション押下時シンボル 
-// 通常側でFnを定義している箇所はここで変更出来ません。
-static int RFnSymbol[ROWMAX][COLMAX] =
-{
-	{ KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_INSERT, KEY_DELETE },
-	{ 0, 0, PRTSC, 0, 0, KEY_UP_ARROW, 0, KEY_BACKSPACE },
-	{ 0, 0, KEY_HOME, KEY_PAGE_UP, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 0, NO_ASMBL },
-	{ 0, 0, 0, KEY_END, KEY_PAGE_DOWN, KEY_DOWN_ARROW, KEY_RIGHT_SHIFT, Fn },
-	{ SPC, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, NO_ASMBL, KEY_RIGHT_GUI, NO_ASMBL, NO_ASMBL, NO_ASMBL }
-};
-
-// 右手ワンショット用テーブル
-// 一つのキーが押下されて離されるまで他のキーが押下されなかった時に発射されるシンボル
-static int ROSymbol[ROWMAX][COLMAX] =
-{
-	{ 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, NO_ASMBL },
-	{ 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ SPC, 0, 0, NO_ASMBL, 0, NO_ASMBL, NO_ASMBL, NO_ASMBL },
-};
-
-// 左手用シンボル
-static int LSymbol[ROWMAX][COLMAX] =
-{
-	{ KEY_ESC, '1', '2', '3', '4', '5', '6', NO_ASMBL },
-	{ TAB, 'q', 'w', 'e', 'r', 't', NO_ASMBL, NO_ASMBL },
-	{ KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', NO_ASMBL, NO_ASMBL },
-	{ KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NO_ASMBL, NO_ASMBL },
-	{ NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_LEFT_ALT, KEY_LEFT_CTRL, NO_ASMBL, NO_ASMBL }
-};
-
-// 左手用Fn押下時シンボル
-// 通常側でFnを定義している箇所はここで変更出来ません。
-static int LFnSymbol[ROWMAX][COLMAX] =
-{
-	{ KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, NO_ASMBL },
-	{ TAB, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
-	{ KEY_LEFT_CTRL, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
-	{ KEY_LEFT_SHIFT, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
-	{ NO_ASMBL, NO_ASMBL, KEY_LEFT_GUI, 0, KEY_LEFT_ALT, KEY_LEFT_CTRL, NO_ASMBL, NO_ASMBL }
-};
-
-// 左手ワンショット用テーブル
-// 一つのキーが押下されて離されるまで他のキーが押下されなかった時に発射されるシンボル
-static int LOSymbol[ROWMAX][COLMAX] =
-{
-	{ 0, 0, 0, 0, 0, 0, 0, NO_ASMBL },
-	{ 0, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
-	{ 0, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
-	{ 0, 0, 0, 0, 0, 0, NO_ASMBL, NO_ASMBL },
-	{ NO_ASMBL, NO_ASMBL, 0, 0, 0, SPC, NO_ASMBL, NO_ASMBL },
-};
+#include "key_map.h"
 
 // Fnキー状態
 static bool IsFnEnable = false;
