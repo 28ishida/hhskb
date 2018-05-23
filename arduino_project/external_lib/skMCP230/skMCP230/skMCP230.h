@@ -98,6 +98,7 @@ class skMCP230
      void Write(int port,int pin,int value) ;
      int  Read(int port,int pin) ;
      char ReadINTF(int port) ;
+     unsigned char Read(int port)
 } ;
 
 #endif

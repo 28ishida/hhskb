@@ -5,8 +5,14 @@
 #include "key_definition.h"
 #include "key_map.h"
 
+#define ONESHOT_DEF
+//#undef ONESHOT_DEF
+
 // Fnキー状態
 static bool IsFnEnable = false;
+
+// Layer1キー状態
+static bool IsLayer1Enable = false;
 
 // 現在のキー状態
 static char RKey[ROWMAX][COLMAX];
@@ -16,22 +22,19 @@ static char LKey[ROWMAX][COLMAX];
 static char OldRKey[ROWMAX][COLMAX];
 static char OldLKey[ROWMAX][COLMAX];
 
-// 発射予約キー
-static char RsvdOnKey[RESERVED_MAX];
-static char RsvdOnModKey[RESERVED_MAX];
-static char RsvdOffKey[RESERVED_MAX];
-static char RsvdOffModKey[RESERVED_MAX];
-
-
-// ワンショットの予約
-static bool OneShotReserveR[ROWMAX][COLMAX];
-
 // ワンショットが実行される際に発行されるコードの予約値
 static int OneShotReserveCode = 0;
-// ワンショットが実行されなかった際に発行されるコードの予約値
-static int OneShotCancelReserveCode = 0;
-// ワンショットが生きているループ数
-static int OneShotActiveCounter = 0;
+
+// ワンショットが予約された元キー
+static int OneShotBaseCode = 0;
+
+// 一回前に発行されたワンショットキーシンボル
+static int PrevOneShotCode = 0;
+
+// ワンショットのリピート実行のキーシンボル
+static int RepeatOneShotCode = 0;
+
+static int speedCheck = 1000;
 
 void setup() {
 	// put your setup code here, to run once:
@@ -47,242 +50,192 @@ void setup() {
 void loop() {
 	// put your main code here, to run repeatedly:
 
+	unsigned long start = micros();
 	memset(RKey, (char)OFF, SUM);
 	ParseRightKey(RKey);
+	unsigned long end = micros();
+
+	if (speedCheck > 0)
+	{
+		Serial.println("RIGHT parse");
+		Serial.print(end - start);
+		Serial.println("");
+		Serial.println("");
+	}
+
+	start = micros();
 	memset(LKey, (char)OFF, SUM);
 	ParseLeftKey(LKey);
+	end = micros();
 
+	if (speedCheck > 0)
+	{
+		Serial.println("LEFT parse");
+		Serial.print(end - start);
+		Serial.println("");
+		Serial.println("");
+		speedCheck--;
+	}
+	
 	keyboardAction(Right);
 	memcpy(OldRKey, RKey, SUM);  
 	keyboardAction(Left);
 	memcpy(OldLKey, LKey, SUM);
-
-	//oneShotActiveCounterExec();
-
-	sendCode();
 }
 
 // 左右どちらかのモジュールに対してシンボルの検索、キーコードのプレス/リリースの発射を行います。
 static void keyboardAction(LorR lr)
 {
-	int tgt = 0;
-	int oTgt = 0;
 	for (int row = 0; row < ROWMAX; row++)
 	{
 		for (int col = 0; col < COLMAX; col++)
 		{
+			int normSymb = getSymbol(row, col, lr);		// 通常のキーコード
+			int osSymb = getOSymbol(row, col, lr);		// ワンショットキーキーコード
+
 			if (isTurnOn(row, col, lr))
 			{
-				if ((tgt = getSymbol(row, col, lr)) == Fn)
+				if (normSymb == Fn)
 				{
 					IsFnEnable = true;
 					TurnOnStatusLed(2);
 				}
+				else if (normSymb == LY1_)
+				{
+					IsLayer1Enable = true;
+					TurnOnStatusLed(1);
+				}
 				else
 				{
-					reserveKey(tgt, true);
+					// ワンショットリピートモードであれば以後の処理は不要
+					if (!repeatOneShotStart(osSymb))
+					{
+						reserveOneShot(normSymb, osSymb);
+						sendKey(normSymb, true);
+					}
 				}
-
 			}
 			else if (isTurnOff(row, col, lr))
 			{
-				if ((tgt = getSymbol(row, col, lr)) == Fn)
+				if (normSymb == Fn)
 				{
 					forceClear();			// IsFnEnableの前に実施する事が大事
 					IsFnEnable = false;
 					TurnOffStatusLed(2);
 				}
+				else if (normSymb == LY1_)
+				{
+					forceClear();			// IsFnEnableの前に実施する事が大事
+					IsLayer1Enable = false;
+					TurnOffStatusLed(1);
+				}
 				else
 				{
-					reserveKey(tgt, false);
+					if (!repeatOneShotEnd(osSymb))
+					{
+						sendKey(normSymb, false);
+						actionOneShot(normSymb, osSymb);
+					}                                                           
 				}
 			}
 		}
 	}
 }
 
-// 予約されたキーを一気に送ります
-static void sendCode()
+// ワンショットリピートの開始処理
+//  ワンショットキーを連打された処理。
+//  戻り値 : true  リピート処理を実施。以後の処理は省略してください
+//           false リピートは発生せず。以後は通常の処理を続けます
+static bool repeatOneShotStart(int otgt)
 {
-	// 押す方は修飾キーから押す
-	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
+	bool ret = false;
+#ifdef ONESHOT_DEF
+	if (PrevOneShotCode != 0)
 	{
-		if (RsvdOnModKey[cnt] == 0)
+		if (PrevOneShotCode == otgt)
 		{
-			break;
+			RepeatOneShotCode = otgt;
+			sendKey(otgt, true);		// ワンショットキーを押しっぱなし
+			ret = true;
 		}
 		else
 		{
-			Keyboard.press(RsvdOnModKey[cnt]);
+			PrevOneShotCode = 0;
 		}
 	}
-	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
-	{
-		if (RsvdOnKey[cnt] == 0)
-		{
-			break;
-		}
-		else
-		{
-			Keyboard.press(RsvdOnKey[cnt]);
-		}
-	}
-	
-	// 離すほうは通常キーから離す
-	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
-	{
-		if (RsvdOffKey[cnt] == 0)
-		{
-			break;
-		}
-		else
-		{
-			Keyboard.release(RsvdOffKey[cnt]);
-		}
-	}
-	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
-	{
-		if (RsvdOffModKey[cnt] == 0)
-		{
-			break;
-		}
-		else
-		{
-			Keyboard.release(RsvdOffModKey[cnt]);
-		}
-	}
-	memset(RsvdOffKey, 0, sizeof(char)*RESERVED_MAX);
-	memset(RsvdOffModKey, 0, sizeof(char)*RESERVED_MAX);
-	memset(RsvdOnKey, 0, sizeof(char)*RESERVED_MAX);
-	memset(RsvdOnModKey, 0, sizeof(char)*RESERVED_MAX);
+#endif
+	return ret;
 }
 
-// 発射予約
-static void reserveKey(int tgt, bool isOn)
+// ワンショットリピートの終了処理
+//  戻り値 : true  リピート処理を終了。以後の処理は省略してください
+//           false リピート終了処理は発生せず。以後は通常の処理を続けます
+static bool repeatOneShotEnd(int osSymb)
+{
+	bool ret = false;
+#ifdef ONESHOT_DEF
+	if (RepeatOneShotCode != 0)
+	{
+		if (RepeatOneShotCode == osSymb)
+		{
+			RepeatOneShotCode = 0;
+			sendKey(osSymb, false);		// ワンショットキーを押しっぱなしを解除
+			ret = true;
+		}
+	}
+#endif
+	return ret;
+}
+
+// ワンショットの実行
+static void actionOneShot(int normSymb, int osSymb)
+{
+#ifdef ONESHOT_DEF 
+	if ((OneShotReserveCode == osSymb) && (OneShotBaseCode == normSymb))
+	{
+		sendKey(OneShotReserveCode, true);
+		sendKey(OneShotReserveCode, false);
+		PrevOneShotCode = OneShotReserveCode;	// 発行したワンショットキーは連射に備えて保存しておきます
+		clearOneShotReserve();
+	}
+#endif
+}
+
+// ワンショットの予約  
+static void reserveOneShot(int normSymb, int osSymb)
+{
+#ifdef ONESHOT_DEF
+	if (osSymb != NOP_ || osSymb != NASB)
+	{
+		OneShotReserveCode = osSymb;
+		OneShotBaseCode = normSymb;
+	}
+	else
+	{
+		// 次のキーが打たれたので予約はキャンセル
+		clearOneShotReserve();
+	}
+#endif // ONESHOT_DEF
+}
+
+// ワンショットの予約をクリア
+static void clearOneShotReserve()
+{
+	OneShotReserveCode = 0;
+	OneShotBaseCode = 0;
+}
+
+// 発射
+static void sendKey(int code, bool isOn)
 {
 	if (isOn)
 	{
-		if (isModifier(tgt))
-		{
-			reserveKeyPrimitive(RsvdOnModKey, tgt);
-		}
-		else
-		{
-			reserveKeyPrimitive(RsvdOnKey, tgt);
-		}
+		Keyboard.press(code);
 	}
 	else
 	{
-		if (isModifier(tgt))
-		{
-			reserveKeyPrimitive(RsvdOffModKey, tgt);
-		}
-		else
-		{
-			reserveKeyPrimitive(RsvdOffKey, tgt);
-		}
-
+		Keyboard.release(code);
 	}
-}
-
-// 予約の実体
-static void reserveKeyPrimitive(char keyArray[], int val)
-{
-	// 予約満帆なら無視でいいや
-	for (int cnt = 0; cnt < RESERVED_MAX; cnt++)
-	{
-		if (keyArray[cnt] == 0)
-		{
-			keyArray[cnt] = val;
-		}
-	}
-}
-
-// ModShotの定義があるか
-static bool hasModShot(int row, int col, LorR lr)
-{
-	bool ret = false;
-	int val = getModShotSymbol(row, col, lr);
-	if ((val != NOP_) && (val != NASB))
-	{
-		ret = true;
-	}
-	return ret;
-}
-
-// 今回のシーケンスでONになったキーの数
-static int ternOnKeyCount(LorR lr)
-{
-	int cnt = 0;
-	for (int row = 0; row < ROWMAX; row++)
-	{
-		for (int col = 0; col < COLMAX; col++)
-		{
-			if (lr == Right)
-			{
-				if ((RKey[row][col]) && (!OldRKey[row][col]))
-				{
-					cnt++;
-				}
-			}
-			else
-			{
-				if ((LKey[row][col]) && (!OldLKey[row][col]))
-				{
-					cnt++;
-				}
-			}
-		}
-	}
-	return cnt;
-}
-
-// OneShot予約 (古いOneShotのキャンセル)
-// 戻り値:
-//  0 OneShot予約は動かなかった。以後通常の処理を行う
-//  1 OneShot予約が動いた。以後通常の処理は行わなくてOK。
-// 引数: 
-//  今押下されたキーの位置情報
-static int oneShotReserve(int row, int col, LorR lr)
-{
-	int ret = 0;
-	if (isOneShotReserved())	// 予約済のところに新しい予約 = 予約はキャンセルされ新しいコードは通常の値として処理される
-	{
-		execOneShotCancel();
-	}
-	else
-	{
-		int oTgt = getModShotSymbol(row, col, lr);
-		if ((oTgt != 0) && (oTgt != NASB))
-		{
-			OneShotReserveCode = oTgt;
-			OneShotCancelReserveCode = getSymbol(row, col, lr);
-			OneShotActiveCounter = ACTIVE_LOOP;
-			ret = 1;
-		}
-	}
-	return ret;
-}
-
-// OneShotの実行 
-// 戻り値:
-//  0 OneShotが実行されなかった。以後通常の処理を行う
-//  1 OneShotが実行された。以後通常の処理を行わなくてOK。
-// 引数: 
-//  今リリースされたキーの位置情報
-static int oneShotAction(int row, int col, LorR lr)
-{
-	int ret = 0;
-	if (isOneShotReserved())
-	{
-		int oTgt = getModShotSymbol(row, col, lr);
-		if (oTgt == OneShotReserveCode)
-		{
-			execOneShot();
-			ret = 1;
-		}
-	}
-	return ret;
 }
 
 // 左右すべての押下中のキーをすべてクリアします
@@ -340,106 +293,49 @@ static int getSymbol(int row, int col, LorR lr)
 	int ret = 0;
 	if (lr == Left)
 	{
-		if (!IsFnEnable)
+		if (IsFnEnable)
 		{
-			ret = LSymbol[row][col];
+			ret = LFnSymbol[row][col];
+		}
+		else if (IsLayer1Enable)
+		{
+			ret = LLayer1Symbol[row][col];
 		}
 		else
 		{
-			ret = LFnSymbol[row][col];
+			ret = LSymbol[row][col];
 		}
 	}
 	else
 	{
-		if (!IsFnEnable)
-		{
-			ret = RSymbol[row][col];
-		}
-		else
+		if (IsFnEnable)
 		{
 			ret = RFnSymbol[row][col];
 		}
+		else if (IsLayer1Enable)
+		{
+			ret = RLayer1Symbol[row][col];
+		}
+		else
+		{
+			ret = RSymbol[row][col];
+		}
 	}
 	return ret;
 }
 
-// 修飾キーかどうか
-static bool isModifier(int tgt)
-{
-	bool ret = false;
-	if ((tgt == RSFT) ||
-		(tgt == LSFT) ||
-		(tgt == RCTL) ||
-		(tgt == LCTL) ||
-		(tgt == RALT) ||
-		(tgt == LALT))
-	{
-		ret = true;
-	}
-	return ret;
-}
-
-static int getModShotSymbol(int row, int col, LorR lr)
+// ワンショットシンボル取得
+static int getOSymbol(int row, int col, LorR lr)
 {
 	int ret = 0;
 	if (lr == Left)
 	{
-		ret = LModSymbol[row][col];
+		ret = LOSymbol[row][col];
 	}
 	else
 	{
-		ret = RModSymbol[row][col];
+		ret = ROSymbol[row][col];
 	}
 	return ret;
 }
-
-// ワンショットカウンタの処理
-static int  oneShotActiveCounterExec()
-{
-	if (isOneShotReserved())
-	{
-		if (OneShotActiveCounter != 0)
-		{
-			OneShotActiveCounter--;
-		}
-		else
-		{
-			// ワンショットの自動キャンセル
-			execOneShotCancel();
-		}
-	}
-}
-
-// ワンショットが予約されているか
-static bool isOneShotReserved()
-{
-	return OneShotReserveCode != 0;
-}
-
-// ワンショットのキャンセル
-static void execOneShotCancel()
-{
-	if (isOneShotReserved())
-	{
-		Keyboard.press(OneShotCancelReserveCode);
-		OneShotReserveCode = 0;
-		OneShotCancelReserveCode = 0;
-		OneShotActiveCounter = 0;
-		delay(1);
-	}
-}
-
-// ワンショットの実行
-static void execOneShot()
-{
-	if (isOneShotReserved())
-	{
-		Keyboard.write(OneShotReserveCode);
-		OneShotReserveCode = 0;
-		OneShotCancelReserveCode = 0;
-		OneShotActiveCounter = 0;
-	}
-}
-
-
 

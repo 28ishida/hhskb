@@ -4,6 +4,7 @@
 #define NASB NO_ASMBL 
 #define NOP_ 0
 #define Fn   Fn
+#define LY1_ LAYER1
 
 #define DELE KEY_DELETE
 #define HOME KEY_HOME
