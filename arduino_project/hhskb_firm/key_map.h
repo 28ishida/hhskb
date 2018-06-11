@@ -26,7 +26,7 @@ static int RFnSymbol[ROWMAX][COLMAX] =
 static int RLayer1Symbol[ROWMAX][COLMAX] =
 {
 	{ F7__, F8__, F9__, F10_, F11_, F12_, NOP_, NOP_ },
-	{ NOP_,  '_', NOP_, NOP_,  '+', NOP_, NOP_, NOP_ },
+	{ NOP_,  '_', NOP_, NOP_,  '+', NOP_, NOP_, BS__ },
 	{ LEFT, DOWN, UP__, RIGT, NOP_, NOP_, NOP_, NOP_ },
 	{ '\\', NOP_,  '-', NOP_, NOP_, NOP_, NOP_, Fn   },
 	{ NOP_, NOP_, NOP_, NASB, NOP_, NASB, NASB, NASB }

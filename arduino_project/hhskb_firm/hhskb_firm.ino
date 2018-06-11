@@ -3,10 +3,18 @@
 #include "right_firm.h"
 #include "left_firm.h"
 #include "key_definition.h"
-#include "key_map.h"
+#include "key_map.h"                             
 
 #define ONESHOT_DEF
 //#undef ONESHOT_DEF
+
+// このターン数だけ連射モードが生きている
+// ターン数を少なくすると通常のコントロールとしての挙動が多くなるが連射モードに入りづらくなる
+// ターン数が多いと連射モードに入りやすくなるがムダに連射モードに入ってしまってCtrl系の誤動作が増える。
+// 連射モードは明示的いキーを叩くので連写モードにギリギリ入れる最小値を探るぐらいがちょうどいい
+// 体感的に25以下だとモードに入れない。100程度だとCtrlのミスが増える。
+// ターンの時間的な長さはファームの動作速度に依存するのでファームをブラッシュアップする場合は再考すること
+#define ROSAC_DEF 28;
 
 // Fnキー状態
 static bool IsFnEnable = false;
@@ -16,11 +24,11 @@ static bool IsLayer1Enable = false;
 
 // 現在のキー状態
 static char RKey[ROWMAX][COLMAX];
-static char LKey[ROWMAX][COLMAX];
+static char LKey[ROWMAX][COLMAX];                          
 
 // ひとつ前のキー状態のバッファ
 static char OldRKey[ROWMAX][COLMAX];
-static char OldLKey[ROWMAX][COLMAX];
+static char OldLKey[ROWMAX][COLMAX];                                    
 
 // ワンショットが実行される際に発行されるコードの予約値
 static int OneShotReserveCode = 0;
@@ -30,6 +38,9 @@ static int OneShotBaseCode = 0;
 
 // 一回前に発行されたワンショットキーシンボル
 static int PrevOneShotCode = 0;
+
+// PrevOneShotCodeの有効カウント数
+static int PrevOneShotActiveCount = 0;
 
 // ワンショットのリピート実行のキーシンボル
 static int RepeatOneShotCode = 0;
@@ -63,6 +74,9 @@ void loop() {
 		Serial.println("");
 	}
 
+	keyboardAction(Right);
+	memcpy(OldRKey, RKey, SUM);
+
 	start = micros();
 	memset(LKey, (char)OFF, SUM);
 	ParseLeftKey(LKey);
@@ -77,8 +91,6 @@ void loop() {
 		speedCheck--;
 	}
 	
-	keyboardAction(Right);
-	memcpy(OldRKey, RKey, SUM);  
 	keyboardAction(Left);
 	memcpy(OldLKey, LKey, SUM);
 }
@@ -140,6 +152,7 @@ static void keyboardAction(LorR lr)
 			}
 		}
 	}
+	checkPrevOneShotCode();
 }
 
 // ワンショットリピートの開始処理
@@ -150,17 +163,18 @@ static bool repeatOneShotStart(int otgt)
 {
 	bool ret = false;
 #ifdef ONESHOT_DEF
-	if (PrevOneShotCode != 0)
+	if (isPrevOneShotCodeActive())
 	{
-		if (PrevOneShotCode == otgt)
+		if (getPrevOneShotCode() == otgt)
 		{
+			clearPrevOneShotCode();		// 自動連射モードに入るので記録はクリアしてOK
 			RepeatOneShotCode = otgt;
-			sendKey(otgt, true);		// ワンショットキーを押しっぱなし
+			sendKey(otgt, true);		// ワンショットキーを押しっぱなし ワンショット 
 			ret = true;
 		}
 		else
 		{
-			PrevOneShotCode = 0;
+			clearPrevOneShotCode();
 		}
 	}
 #endif
@@ -195,10 +209,46 @@ static void actionOneShot(int normSymb, int osSymb)
 	{
 		sendKey(OneShotReserveCode, true);
 		sendKey(OneShotReserveCode, false);
-		PrevOneShotCode = OneShotReserveCode;	// 発行したワンショットキーは連射に備えて保存しておきます
+		// 発行したワンショットキーは連射に備えて保存しておきます
+		registPrevOneShotCode(OneShotReserveCode);
 		clearOneShotReserve();
 	}
 #endif
+}
+
+// ワンショットの記録値が生きているか
+static bool isPrevOneShotCodeActive()
+{
+	return PrevOneShotCode != 0;
+}
+
+// ワンショットの記録値を取得する
+static int getPrevOneShotCode()
+{
+	return PrevOneShotCode;
+}
+
+// 実行したワンショットを登録する
+static void registPrevOneShotCode(int prevCode)
+{
+	PrevOneShotCode = prevCode;
+	PrevOneShotActiveCount = ROSAC_DEF;
+}
+
+// 実行したワンショットの記録をクリアする
+static void clearPrevOneShotCode()
+{
+	PrevOneShotCode = 0;
+	PrevOneShotActiveCount = 0;
+}
+
+// ワンショットの記録の有効期限チェック
+static void  checkPrevOneShotCode()
+{
+	if (PrevOneShotActiveCount-- == 0)
+	{
+		PrevOneShotCode = 0;
+	}
 }
 
 // ワンショットの予約  
